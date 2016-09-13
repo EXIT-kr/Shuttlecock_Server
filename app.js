@@ -65,43 +65,39 @@ var comments_list = [];
 
 var post_id_list = [];
     
+FB.api('hyubamboo/feed', function(res){
+    // error
+    if(!res || res.error) {
+        console.log(!res ? 'error occurred' : res.error);
+        return;
+    }
 
+    fb_data = res;
+    //make id list
+    for(var i = 0; i < fb_data.data.length; i++){
+         post_id_list.push(fb_data.data[i].id);
+    }
+
+    function loop(post_id_list, current, end){
+        //page response
+        if(current == end) return;
+        console.log(post_id_list[current]);
+
+        return FB.api(post_id_list[current]+'/comments', function(res){
+            console.log(res);
+            comments_list.push(res);
+            return loop(post_id_list, current+1, end);
+        })
+    }
+
+    loop(post_id_list, 0, post_id_list.length);
+
+})
 
     
 app.get("/hyubamboo", function(req, res) {
-    
-    var page_res = res;
-    
-    FB.api('hyubamboo/feed', function(res){
-    // error
-        if(!res || res.error) {
-            console.log(!res ? 'error occurred' : res.error);
-            return;
-        }
-
-        fb_data = res;
-        //make id list
-        for(var i = 0; i < fb_data.data.length; i++){
-             post_id_list.push(fb_data.data[i].id);
-        }
-
-        function loop(post_id_list, current, end){
-            //page response
-            if(current == end) return page_res.send({'post_data':fb_data, 'comment_data':comments_list});
-            console.log(post_id_list[current]);
-
-            return FB.api(post_id_list[current]+'/comments', function(res){
-                console.log(res);
-                comments_list.push(res);
-                return loop(post_id_list, current+1, end);
-            })
-        }
-
-        loop(post_id_list, 0, post_id_list.length);
-
-    })
-    
-//    res.send({'post_data':fb_data, 'comment_data':comments_list});
+//    var page_res = res;    
+    res.send({'post_data':fb_data, 'comment_data':comments_list});
 })
 
 
