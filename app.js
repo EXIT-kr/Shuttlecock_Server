@@ -1,4 +1,5 @@
 var express = require('express');
+var FB = require('fb');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -9,6 +10,12 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+
+// Facebook AccessToken
+FB.setAccessToken('607442856100225|1PKH0ji8fyGRDC96ZGWkuQw8YHk');
+console.log('Facebook AccessToken Success');
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,6 +35,21 @@ app.use('/users', users);
 
 
 console.log('Server Start');
+
+
+var fb_data;
+FB.api('hyubamboo/feed', function (res) {
+    if(!res || res.error) {
+        console.log(!res ? 'error occurred' : res.error);
+        return;
+    }
+    fb_data = res;
+    console.log('Post Id: ' + res.data[0].message);
+});
+
+app.get("/test", function(req, res) {
+    res.send(fb_data);
+})
 
 
 

@@ -126,6 +126,12 @@
 ////                    alert('hi');
 ////                })
 //            })
+            $(document).ready(function(){
+                $.get("/test", function(string) {
+                    alert(string.data[0].message);
+                })    
+            })
+            
         </script>
     </head>
     <body>
