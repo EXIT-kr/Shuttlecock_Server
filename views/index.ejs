@@ -6,6 +6,8 @@
 <!--        access_token=607442856100225|1PKH0ji8fyGRDC96ZGWkuQw8YHk-->
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
         <script type="text/javascript" src="jquery.ajax-cross-origin.min.js"></script>
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css">
+
         <style>
             *{
                 margin: 0 auto;
@@ -21,26 +23,83 @@
         </style>
         <script type="text/javascript">
             
+//            $(document).ready(function(){
+//                $.get("/hyubamboo", function(response) {
+//                    for(var i = 0; i < response.post_data.data.length; i++){
+//                        
+//                        var msg = response.post_data.data[i].message;
+//                        var comment_count = response.comment_data[i].data.length;
+//                        var comment_box = $('<div>').html('</br>');
+//                        comment_box.append($('<h4>').html('<i class="xi-comment-o"></i> '+comment_count));
+//                        
+//                        for(var j = 0; j < comment_count; j++){
+//                            
+//                            comment_box.append($('<h5>').html(response.comment_data[i].data[j].message+'</br></br>'));
+//                        }
+//                        
+//                        $('#test').append(
+//                            $('<div>').addClass('card').html(msg.replace(/\n/gi,"</br>")).append(comment_box)
+//                        );
+//                        
+//                    }
+//                    
+//                    
+//                })    
+//            })
+            
             $(document).ready(function(){
-                $.get("/hyubamboo", function(response) {
-                    for(var i = 0; i < response.post_data.data.length; i++){
-                        
-                        var msg = response.post_data.data[i].message;
-                        var comment_count = response.comment_data[i].data.length;
-                        var comment_box = $('<div>').html('</br>');
-                        
-                        for(var j = 0; j < comment_count; j++){
-                            comment_box.append($('<h6>').html(response.comment_data[i].data[j].message+'</br></br>'));
+                
+                    $.get('/hyubamboo', function(res){
+                    
+                        var count = res.data.length;
+
+                        for(var i = 0; i < count; i++){
+                            var content = res.data[i];
+                            
+                            var card = $('<div>').addClass('card');
+                            
+                            if('message' in content){
+                                var msg = content.message;
+                                card.html(msg.replace(/\n/gi,"</br>"));
+                                card.append('</br>');
+                            }
+                            if('full_picture' in content){
+                                var img_url = content.full_picture;
+                                card.append($('<img>').attr({'src': img_url, 'width': '80%'}));
+                            }
+                            if('likes' in content){
+                                var likes = content.likes.data;
+                                card.append($('<h4>').html('<i class="xi-heart"></i>' + likes.length));
+                            }
+                            if('comments' in content){
+                                var comments = content.comments.data;
+                                card.append($('<h4>').html('<i class="xi-message-o"></i> '+comments.length));
+                                var comment_box = $('<div>').html('</br>');
+                                for(var j = 0; j < comments.length; j++){
+                                    comment_box.append($('<h5>').html(comments[j].message+'</br></br>'));
+                                }
+                                card.append(comment_box);
+                            }
+                            
+                            
+                            
+//
+                            
+//                            comment_box.append($('<img>').attr({'src': img_url, 'width': '80%'}));
+//                            comment_box.append($('<h4>').html('<i class="xi-comment-o"></i> '+comments.length));
+//
+                            
+                            
+                            $('#test').append(card);
+//                            $('#test').append(
+//                                $('<div>').addClass('card').html(msg.replace(/\n/gi,"</br>")).append(comment_box)
+//                            );
+
                         }
-                        
-                        $('#test').append(
-                            $('<div>').addClass('card').html(msg.replace(/\n/gi,"</br>")).append(comment_box)
-                        );
-                        
-                    }
-                    
-                    
-                })    
+                    });
+                
+                
+                
             })
             
         </script>

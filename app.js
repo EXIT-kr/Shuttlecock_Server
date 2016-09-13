@@ -39,65 +39,48 @@ console.log('Server Start');
 
 var fb_data;
 var comments_list = [];
-
-//FB.api('hyubamboo/feed', function (res) {
+var post_id_list = [];
+    
+//FB.api('ericadaesin/feed', function(res){
+//    // error
+//    comments_list = [];
+//    post_id_list = [];
+//    
 //    if(!res || res.error) {
 //        console.log(!res ? 'error occurred' : res.error);
 //        return;
 //    }
+//
 //    fb_data = res;
+//    //make id list
 //    for(var i = 0; i < fb_data.data.length; i++){
-//        var post_id = fb_data.data[i].id;
-//        console.log(post_id);
-//        
-//        FB.api(post_id+'/comments', function(res){
+//         post_id_list.push(fb_data.data[i].id);
+//    }
+//
+//    function loop(post_id_list, current, end){
+//        //page response
+//        if(current == end) return;
+//        console.log(post_id_list[current]);
+//
+//        return FB.api(post_id_list[current]+'/comments', function(res){
 //            console.log(res);
 //            comments_list.push(res);
-//        });   
-//        
-//        
+//            return loop(post_id_list, current+1, end);
+//        })
 //    }
-//    
-////    console.log('Post Id: ' + res.data[0].message);
-//});
-
-
-
-var post_id_list = [];
-    
-FB.api('hyubamboo/feed', function(res){
-    // error
-    if(!res || res.error) {
-        console.log(!res ? 'error occurred' : res.error);
-        return;
-    }
-
-    fb_data = res;
-    //make id list
-    for(var i = 0; i < fb_data.data.length; i++){
-         post_id_list.push(fb_data.data[i].id);
-    }
-
-    function loop(post_id_list, current, end){
-        //page response
-        if(current == end) return;
-        console.log(post_id_list[current]);
-
-        return FB.api(post_id_list[current]+'/comments', function(res){
-            console.log(res);
-            comments_list.push(res);
-            return loop(post_id_list, current+1, end);
-        })
-    }
-
-    loop(post_id_list, 0, post_id_list.length);
-
-})
+//
+//    loop(post_id_list, 0, post_id_list.length);
+//
+//})
 
     
 app.get("/hyubamboo", function(req, res) {
-//    var page_res = res;    
-    res.send({'post_data':fb_data, 'comment_data':comments_list});
+//    var page_res = res;
+    FB.api('hyubamboo/feed?fields=comments,likes,full_picture,message', function(fb_res){
+        console.log(fb_res);
+        res.send(fb_res);
+    })
+//    res.send({'post_data':fb_data, 'comment_data':comments_list});
 })
 
 
