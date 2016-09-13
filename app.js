@@ -47,7 +47,7 @@ FB.api('hyubamboo/feed', function (res) {
     console.log('Post Id: ' + res.data[0].message);
 });
 
-app.get("/test", function(req, res) {
+app.get("/hyubamboo", function(req, res) {
     res.send(fb_data);
 })
 
