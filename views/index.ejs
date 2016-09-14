@@ -13,36 +13,51 @@
         <link rel="stylesheet" href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css">
 
         <style>
-            @import url(//fonts.googleapis.com/earlyaccess/nanumgothic.css);
-
+/*            @import url(//fonts.googleapis.com/earlyaccess/nanumgothic.css);*/
+            @import url(https://cdn.rawgit.com/theeluwin/NotoSansKR-Hestia/master/stylesheets/NotoSansKR-Hestia.css);
+            
             *{
                 margin: 0 auto;
-                font-family: 'Nanum Gothic', sans-serif;
+/*                font-family: 'Nanum Gothic', sans-serif;*/
+                font-family:'Noto Sans Korean';
                 font-weight: 400;
             }
             body{
                 background: #fafafa;
             }
+            #bg{
+/*                background-image: url(/images/bg.jpg);*/
+                background: white;
+                background-size: cover;
+            }
             #title{
+                width: 100%;
+                position: fixed;
                 padding: 15px 10px;
-                background: #465892;
-                color: white;
+                background: white;
+/*                                background-image: url(/images/bg.png);*/
+                opacity: 0.95;
+                color: rgba(0, 50, 120, 0.7);
                 text-align: center;
+                box-shadow: 0px 3px 10px rgba(0,0,0,0.3);
             }
             #profile{
-                width: 120px;
-                height: 120px;
-                border-radius: 100%;
-                border: 3px solid white;
+                margin-bottom: 10px;
+                width: 100px;
+/*                border-radius: 100%;*/
+/*                border: 3px solid white;*/
+                opacity: 0.7;
                 display: block;
                 margin: auto;
             }
             #tab{
                 padding: 50px;
-                background: linear-gradient(135deg, #465892 0%,#6f5f9f 100%);
-/*                background-image: url(https://scontent.xx.fbcdn.net/v/t1.0-9/13315540_1405055156460167_7685412883924271401_n.jpg?oh=eaa4c85273b4bc45a623af15eed84845&oe=583D3302);*/
-                background-size: cover;
-                color: white;
+                padding-bottom: 30px;
+/*                background: linear-gradient(135deg, #465892 0%,#6f5f9f 100%);*/
+                background: #1b6ed3;
+                text-align: center;
+                color: rgba(255, 255, 255, 0.7);
+/*                color: rgba(0, 0, 0, 0.5);*/
                 
                 
             }
@@ -60,14 +75,23 @@
                 background: white;
                 margin: 15px auto;
                 width: 80%;
+/*                opacity: 0.5;*/
+                color: rgba(0, 0, 0, 0.5);
                 box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
             }
             p.comment{
                 font-size: 13px;
                 margin: 3px;
+                
             }
             .xi-heart{
                 color: #F15F5F;
+            }
+            .left{
+                float: left;
+            }
+            .clear{
+                clear: both;
             }
         </style>
         <script type="text/javascript">
@@ -84,7 +108,7 @@
 
                     if('message' in content){
                         var msg = content.message;
-                        card.html(msg.replace(/\n/gi,"</br>"));
+                        card.append($('<p>').html(msg.replace(/\n/gi,"</br>")));
                         card.append('</br>');
                     }
                     if('full_picture' in content){
@@ -141,8 +165,8 @@
                 });
                 //한양대학교 대나무숲
                 $('#bamboo').click(function(){
-                    $('#title').text('한양대학교 대나무숲');
-                    $('#profile').attr('src','https://scontent.xx.fbcdn.net/v/t1.0-9/14022189_1089873597770733_1237635461064945047_n.jpg?oh=6ad6446d5152ee20d88ee84fee12dbcd&oe=5873B89C');
+                    $('#title_msg').text('한양대학교 대나무숲');
+                    $('#profile').attr('src','/images/bamboo.png');
                     $.get('/hyubamboo', function(res){
                         get_data(res);
                     });
@@ -150,8 +174,8 @@
                 
                 //한양대에리카 대신 전해드립니다.
                 $('#daesin').click(function(){
-                    $('#title').text('한에대전');
-                    $('#profile').attr('src','https://scontent.xx.fbcdn.net/v/t1.0-9/1909873_1080170652004992_8272055158638769617_n.jpg?oh=9e15baf0390c02c3abeda022d0393b2f&oe=5879F3BB');
+                    $('#title_msg').text('한양대 ERICA 대신 전해드립니다');
+                    $('#profile').attr('src','/images/megaphone.png');
                     $.get('/daesin', function(res){
                         get_data(res);
                     });
@@ -160,20 +184,24 @@
                 
                 
                 $('#love').click(function(){
-                    $('#title').text('한에사피');
-                    $('#profile').attr('src','https://scontent.xx.fbcdn.net/v/l/t1.0-9/12523822_1012697888810916_2448908396646436421_n.jpg?oh=b84a6bab3773bc7374be291e11978eda&oe=5877489A');
+                    $('#title_msg').text('한양대 ERICA에 사랑을 피워드립니다');
+                    $('#profile').attr('src','/images/heart.png');
                     $.get('/love', function(res){
                         get_data(res);
                     });
                 });
                 //총학생회
                 $('#student').click(function(){
-                    $('#title').text('총학생회');
-                    $('#profile').attr('src','https://scontent.xx.fbcdn.net/v/t1.0-9/12391169_1394590304173319_4716394767427625812_n.jpg?oh=3bd5334e8e399cf702ebcc2b80bb1f3b&oe=588587AD');
+                    $('#title_msg').text('한양대 ERICA 총학생회');
+                    $('#profile').attr('src','/images/group.png');
                     $.get('/student', function(res){
                         get_data(res);
                     });
                 });
+                
+                $('#btn_back').click(function(){
+                    location.href="http://셔틀콕.kr";
+                })
 
             });
                 
@@ -182,17 +210,24 @@
         
     </head>
     <body>
-        
-        <h3 id="title">한양대학교 대나무숲</h3>
-        <div id="tab">
-            <img src="https://scontent.xx.fbcdn.net/v/t1.0-9/14022189_1089873597770733_1237635461064945047_n.jpg?oh=6ad6446d5152ee20d88ee84fee12dbcd&oe=5873B89C" id="profile">
-            </br>
-            <ul>
-                <li id="bamboo">대나무숲</li>
-                <li id="daesin">한에대전</li>
-                <li id="love">한에사피</li>
-                <li id="student">총학생회</li>
-            </ul>
+        <div id="bg">
+            <div id="title">
+                <h3 id="btn_back" class="left" style="display:inline-block"><i class="xi-angle-left-thin"></i></h3>
+<!--                <div class="clear"></div>-->
+                <h3 id="title_msg"style="display:inline-block; margin-left:-25px;">한양대학교 대나무숲</h3>
+            </div>
+            <div id="tab">
+
+<!--                <img src="/images/bamboo.png" id="profile">-->
+                </br>
+                <ul>
+                    <li id="bamboo">대나무숲</li>
+                    <li id="daesin">한에대전</li>
+                    </br>
+                    <li id="love">한에사피</li>
+                    <li id="student">총학생회</li>
+                </ul>
+            </div>
         </div>
         
         <div id="test">
