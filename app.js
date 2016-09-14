@@ -73,16 +73,28 @@ var post_id_list = [];
 //
 //})
 
-    
+//대나무숲    
 app.get("/hyubamboo", function(req, res) {
-//    var page_res = res;
     FB.api('hyubamboo/feed?fields=comments,likes,full_picture,message', function(fb_res){
         console.log(fb_res);
         res.send(fb_res);
     })
-//    res.send({'post_data':fb_data, 'comment_data':comments_list});
+})
+//한양대 에리카 대신 전해드립니다
+app.get("/daesin", function(req, res) {
+    FB.api('ericadaesin/feed?fields=comments,likes,full_picture,message', function(fb_res){
+        console.log(fb_res);
+        res.send(fb_res);
+    })
 })
 
+//한에사피
+app.get("/love", function(req, res) {
+    FB.api('EricaLoveMaker/feed?fields=comments,likes,full_picture,message', function(fb_res){
+        console.log(fb_res);
+        res.send(fb_res);
+    })
+})
 
 
 // catch 404 and forward to error handler
