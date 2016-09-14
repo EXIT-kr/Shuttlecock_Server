@@ -93,7 +93,7 @@
                             var comment_likes = comments[j].like_count;
                             var comment_msg = comments[j].message;
                             comment_box.append('<hr></br>');
-                            comment_box.append($('<h4>').html(comment_name + ' <i class="xi-thumbs-up"></i>' + comment_likes) );
+                            comment_box.append($('<h4>').html(comment_name + ' <i class="xi-thumbs-up"></i> ' + comment_likes) );
                             comment_box.append($('<p>').addClass('comment').html(comment_msg.replace(/\n/gi,"</br>") ));
                             comment_box.append($('<h5>').html('</br>'));
 //                            comment_box.append($('<h5>').text('</br></br>'));
@@ -138,7 +138,13 @@
                         get_data(res);
                     });
                 });
-
+                //총학생회
+                $('#student').click(function(){
+                    $('#title').text('한에사피');
+                    $.get('/student', function(res){
+                        get_data(res);
+                    });
+                });
 
             });
                 
@@ -154,6 +160,7 @@
                 <li id="bamboo">대나무숲</li>
                 <li id="daesin">한에대전</li>
                 <li id="love">한에사피</li>
+                <li id="student">총학생회</li>
             </ul>
         </div>
         

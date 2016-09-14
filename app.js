@@ -97,6 +97,14 @@ app.get("/love", function(req, res) {
     })
 })
 
+//한에사피
+app.get("/student", function(req, res) {
+    FB.api('hanyangericagsa/feed'+url, function(fb_res){
+        console.log(fb_res);
+        res.send(fb_res);
+    })
+})
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
