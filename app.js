@@ -97,7 +97,7 @@ app.get("/love", function(req, res) {
     })
 })
 
-//한에사피
+//총학생회
 app.get("/student", function(req, res) {
     FB.api('hanyangericagsa/feed'+url, function(fb_res){
         console.log(fb_res);

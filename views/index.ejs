@@ -7,21 +7,44 @@
 <!--        access_token=607442856100225|1PKH0ji8fyGRDC96ZGWkuQw8YHk-->
         
         <meta name="viewport" content="width=device-width, user-scalable=no">
+        
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
         <script type="text/javascript" src="jquery.ajax-cross-origin.min.js"></script>
         <link rel="stylesheet" href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css">
 
         <style>
+            @import url(//fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
             *{
                 margin: 0 auto;
+                font-family: 'Nanum Gothic', sans-serif;
+                font-weight: 400;
             }
             body{
                 background: #fafafa;
             }
-            #tab{
-                padding: 20px;
-                background: #4BA6BA;
+            #title{
+                padding: 15px 10px;
+                background: #465892;
                 color: white;
+                text-align: center;
+            }
+            #profile{
+                width: 120px;
+                height: 120px;
+                border-radius: 100%;
+                border: 3px solid white;
+                display: block;
+                margin: auto;
+            }
+            #tab{
+                padding: 50px;
+                background: linear-gradient(135deg, #465892 0%,#6f5f9f 100%);
+/*                background-image: url(https://scontent.xx.fbcdn.net/v/t1.0-9/13315540_1405055156460167_7685412883924271401_n.jpg?oh=eaa4c85273b4bc45a623af15eed84845&oe=583D3302);*/
+                background-size: cover;
+                color: white;
+                
+                
             }
             #tab > ul{
                 list-style: none;
@@ -119,6 +142,7 @@
                 //한양대학교 대나무숲
                 $('#bamboo').click(function(){
                     $('#title').text('한양대학교 대나무숲');
+                    $('#profile').attr('src','https://scontent.xx.fbcdn.net/v/t1.0-9/14022189_1089873597770733_1237635461064945047_n.jpg?oh=6ad6446d5152ee20d88ee84fee12dbcd&oe=5873B89C');
                     $.get('/hyubamboo', function(res){
                         get_data(res);
                     });
@@ -127,13 +151,17 @@
                 //한양대에리카 대신 전해드립니다.
                 $('#daesin').click(function(){
                     $('#title').text('한에대전');
+                    $('#profile').attr('src','https://scontent.xx.fbcdn.net/v/t1.0-9/1909873_1080170652004992_8272055158638769617_n.jpg?oh=9e15baf0390c02c3abeda022d0393b2f&oe=5879F3BB');
                     $.get('/daesin', function(res){
                         get_data(res);
                     });
                 });
                 //한에사피
+                
+                
                 $('#love').click(function(){
                     $('#title').text('한에사피');
+                    $('#profile').attr('src','https://scontent.xx.fbcdn.net/v/l/t1.0-9/12523822_1012697888810916_2448908396646436421_n.jpg?oh=b84a6bab3773bc7374be291e11978eda&oe=5877489A');
                     $.get('/love', function(res){
                         get_data(res);
                     });
@@ -141,6 +169,7 @@
                 //총학생회
                 $('#student').click(function(){
                     $('#title').text('총학생회');
+                    $('#profile').attr('src','https://scontent.xx.fbcdn.net/v/t1.0-9/12391169_1394590304173319_4716394767427625812_n.jpg?oh=3bd5334e8e399cf702ebcc2b80bb1f3b&oe=588587AD');
                     $.get('/student', function(res){
                         get_data(res);
                     });
@@ -153,8 +182,10 @@
         
     </head>
     <body>
+        
+        <h3 id="title">한양대학교 대나무숲</h3>
         <div id="tab">
-            <h1 id="title">한양대학교 대나무숲</h1>
+            <img src="https://scontent.xx.fbcdn.net/v/t1.0-9/14022189_1089873597770733_1237635461064945047_n.jpg?oh=6ad6446d5152ee20d88ee84fee12dbcd&oe=5873B89C" id="profile">
             </br>
             <ul>
                 <li id="bamboo">대나무숲</li>
