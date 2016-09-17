@@ -73,35 +73,56 @@ var post_id_list = [];
 //
 //})
 
-var url = '?fields=comments{from,message,like_count},likes,full_picture,message'
+var url = '?fields=comments{from,message,like_count},likes,full_picture,message,attachments,updated_time'
+//var url = '?fields=attachments'
+
+var info = '?fields=fan_count,about,name'
 //대나무숲    
 app.get("/hyubamboo", function(req, res) {
     FB.api('hyubamboo/feed'+url, function(fb_res){
-        console.log(fb_res);
-        res.send(fb_res);
+        FB.api('hyubamboo'+info, function(page_info){
+            console.log(fb_res);
+            res.send({'page_info': page_info, 'page_data': fb_res});
+        })
     })
 })
 //한양대 에리카 대신 전해드립니다
 app.get("/daesin", function(req, res) {
     FB.api('ericadaesin/feed'+url, function(fb_res){
-        console.log(fb_res);
-        res.send(fb_res);
+        FB.api('ericadaesin'+info, function(page_info){
+            console.log(fb_res);
+            res.send({'page_info': page_info, 'page_data': fb_res});
+        })
     })
 })
 
 //한에사피
 app.get("/love", function(req, res) {
     FB.api('EricaLoveMaker/feed'+url, function(fb_res){
-        console.log(fb_res);
-        res.send(fb_res);
+        FB.api('EricaLoveMaker'+info, function(page_info){
+            console.log(fb_res);
+            res.send({'page_info': page_info, 'page_data': fb_res});
+        })
     })
 })
 
 //총학생회
 app.get("/student", function(req, res) {
     FB.api('hanyangericagsa/feed'+url, function(fb_res){
-        console.log(fb_res);
-        res.send(fb_res);
+        FB.api('hanyangericagsa'+info, function(page_info){
+            console.log(fb_res);
+            res.send({'page_info': page_info, 'page_data': fb_res});
+        })
+    })
+})
+
+//동아리 연합회
+app.get("/ca", function(req, res) {
+    FB.api('HYUnivCA/feed'+url, function(fb_res){
+        FB.api('HYUnivCA'+info, function(page_info){
+            console.log(fb_res);
+            res.send({'page_info': page_info, 'page_data': fb_res});
+        })
     })
 })
 
