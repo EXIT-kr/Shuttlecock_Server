@@ -127,6 +127,17 @@ app.get("/ca", function(req, res) {
 })
 
 
+//기숙사 자치회
+app.get("/dorm", function(req, res) {
+    FB.api('ericadormitory/feed'+url, function(fb_res){
+        FB.api('ericadormitory'+info, function(page_info){
+            console.log(fb_res);
+            res.send({'page_info': page_info, 'page_data': fb_res});
+        })
+    })
+})
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
