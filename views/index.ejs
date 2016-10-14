@@ -455,7 +455,7 @@
                     },
                     error: function(data) {
                         alert('Failed!'); 
-                        $('#msg').html(data);
+                        $('#msg').text(data.body);
                     }
                 }); 
                 $.ajax({
