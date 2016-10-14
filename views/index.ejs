@@ -453,7 +453,10 @@
 //                        alert(array);
                     
                     },
-                    error: function(data) { alert('Failed!'); }
+                    error: function(data) {
+                        alert('Failed!'); 
+                        $('#msg').text(data);
+                    }
                 }); 
                 $.ajax({
                     url: subway_url+'2',
@@ -600,7 +603,7 @@
         
         <div class="card">
             <h4><i class="xi-info-o"></i> 공지사항</h4>
-            <h5 style="margin:5px;">셔틀콕의 디자인이 전면 개편되었습니다.</h5>
+            <h5 id="msg" style="margin:5px;">셔틀콕의 디자인이 전면 개편되었습니다.</h5>
         </div>
 <!--
         <div class="card">
