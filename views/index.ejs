@@ -255,7 +255,7 @@
                         var card = $('<div class="card">');
                         var left = $('<div class="pull-left" style="text-align:center; margin-left:10px">');
 
-                        var right = $('<div class="pull-right">').html('<h3>'+cycleData[i]+'</h3>');
+                        var right = $('<div class="pull-right" style="padding-top:10px;">').html('<h3>'+cycleData[i]+'</h3>');
                         var currentTime = $('<div>');
 
                         left.html('<h1><i class="xi xi-refresh"></i></h1><p>순환버스</p>');
@@ -454,8 +454,8 @@
                     
                     },
                     error: function(data) {
-                        alert(data.body); 
-                        $('#msg').text(data.body);
+//                        alert(data.body); 
+//                        $('#msg').text(data.body);
                     }
                 }); 
                 $.ajax({
