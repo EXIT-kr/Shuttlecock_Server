@@ -1,4 +1,5 @@
 var express = require('express');
+var request = require('request');
 var FB = require('fb');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -73,6 +74,31 @@ var post_id_list = [];
 //
 //})
 
+
+
+var options = {
+    url: 'http://apis.skplanetx.com/weather/forecast/3hours?lon=126.8112500000&village=&county=&lat=37.3048100000&city=&version=1',
+    headers: {
+        'x-skpop-userId' : 'kbk9288@gmail.com',
+        'Accept': 'application/json',
+        'appKey': '7d604ba2-e3d2-3fb5-b516-505ee8db19f2'
+    }
+};
+
+
+app.get('/weather', function(req, res){
+    request.get(options, function(err, weather_res, next){
+        if(err) console.log(err);
+        else{
+            console.log(weather_res.body);
+            res.send(weather_res.body);
+        }
+    })
+});
+
+
+
+
 var url = '?fields=comments{from,message,like_count},likes,full_picture,message,attachments,updated_time'
 //var url = '?fields=attachments'
 
@@ -137,6 +163,10 @@ app.get("/dorm", function(req, res) {
     })
 })
 
+
+app.get('/boring', function(req, res){
+    res.render('boring');
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
