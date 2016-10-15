@@ -49,6 +49,7 @@
                 background: #323742;
                 text-align: left;
                 padding: 10px 20px;
+                -webkit-transform: translate3d(0, 0, 0);
             }
             #hide_rocation > h4{
                 padding: 5px 0px;
@@ -389,6 +390,11 @@
                             $('#weather_img').attr('src','images/weather/lightning_icon.png');
                             $('#weather').css('background-image','url(images/weather/rain_bg.jpg)');
                             $('#weather_msg').html('오늘은 벼락이 친데요!<br>큰 비가 올지도 몰라요');
+                        }
+                        else{
+                            $('#weather_img').attr('src','images/weather/sunny_icon.png');
+                            $('#weather').css('background-image','url(images/weather/sunny_bg.jpg)');
+                            $('#weather_msg').html('날씨 서버 상태가 좋지 않습니다.');
                         }
                     }
                 })
