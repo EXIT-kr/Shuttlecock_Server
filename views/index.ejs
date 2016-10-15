@@ -338,6 +338,15 @@
                     dataType: 'json',
                     success: function(data){
                         console.log(data);
+                        
+                        //error
+                        if(data.error.code == "9504"){
+                            $('#weather_img').attr('src','images/weather/sunny_icon.png');
+                            $('#weather').css('background-image','url(images/weather/sunny_bg.jpg)');
+                            $('#weather_msg').html('날씨 서버 상태가 좋지 않습니다. <br>빠른 시간 내에 정상화 하도록 하겠습니다');
+                        }
+                        
+                        
                         console.log(data.weather.forecast3hours['0'].sky.code1hour);
                         console.log(data.weather.forecast3hours['0'].sky.code2hour);
                         console.log(data.weather.forecast3hours['0'].sky.code3hour);
@@ -391,11 +400,7 @@
                             $('#weather').css('background-image','url(images/weather/rain_bg.jpg)');
                             $('#weather_msg').html('오늘은 벼락이 친데요!<br>큰 비가 올지도 몰라요');
                         }
-                        else{
-                            $('#weather_img').attr('src','images/weather/sunny_icon.png');
-                            $('#weather').css('background-image','url(images/weather/sunny_bg.jpg)');
-                            $('#weather_msg').html('날씨 서버 상태가 좋지 않습니다.');
-                        }
+                        
                     }
                 })
                 
@@ -681,7 +686,7 @@
                     <a href="http://foodcock.herokuapp.com">
                         <div class="slide">
                             <h2>Food</h2>
-                            <br><br><br><br><br><br><br><br>
+                            <br><br><br><br><br><br>
                             <p>오늘도 열심히 공부한 당신을 위해 준비했어요</p>
                             <p>오늘 메뉴는 무엇일까요?</p>
                         </div>
@@ -693,7 +698,7 @@
                     <a href="/boring">
                         <div class="slide">
                             <h2>Social</h2>
-                            <br><br><br><br><br><br><br><br>
+                            <br><br><br><br><br><br>
                             <p>사자가 심심할 때,</p>
                             <p>학교 이야기를 읽으러 가보는건 어때요?</p>
                         </div>
