@@ -340,7 +340,7 @@
                         console.log(data);
                         
                         //error
-                        if(data.error.code == "9504"){
+                        if(data in 'error'){
                             $('#weather_img').attr('src','images/weather/sunny_icon.png');
                             $('#weather').css('background-image','url(images/weather/sunny_bg.jpg)');
                             $('#weather_msg').html('날씨 서버 상태가 좋지 않습니다. <br>빠른 시간 내에 정상화 하도록 하겠습니다');
