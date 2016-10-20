@@ -75,6 +75,13 @@
                 color: white;
                 font-weight: 400;
             }
+            #pedalro{
+                background-image: url(images/bicycle.jpg);
+                background-size: cover;
+                color: white;
+                font-weight: 400;
+            }
+                
             #footer{
                 background: white;
                 width: 100%;
@@ -211,7 +218,7 @@
 
                         left.html('<h1>'+icon+'</h1> <p>'+arrive+'</p>');
 
-                        var right = $('<div class="pull-right">').html('<h3>'+curData[i]+'</h3>');
+                        var right = $('<div class="pull-right" style="padding-top:10px;">').html('<h3>'+curData[i]+'</h3>');
                         var currentTime = $('<div>');
 
                         right.append(currentTime);
@@ -296,7 +303,43 @@
 				});
             }
             
-            
+            function getPedalroTime(){
+                $.ajax({
+                    url: '/pedalro',
+                    type: 'GET',
+                    success: function(data){
+                        console.log(data);
+                        $('#bicycle_hanyang').text(data[0].val+' 대');
+                        $('#bicycle_dorm').text(data[1].val+' 대');
+                        
+                        var today = new Date();
+                        
+                        var yyyy = today.getFullYear();
+                        var dd = today.getDate();
+                        var MM = today.getMonth()+1; //January is 0!
+                        
+                        
+                        var hh = today.getHours();
+                        var mm = today.getMinutes();
+                        var ss = today.getSeconds();
+                        
+                        if(dd < 10) dd = '0' + dd;
+                        if(MM < 10) MM = '0' + MM;
+                        
+                        if(hh < 10) hh = '0' + hh;
+                        if(mm < 10) mm = '0' + mm;
+                        if(ss < 10) ss = '0' + ss;
+                        
+                        
+                        var today = yyyy+'-'+MM+'-'+dd+' ';
+                        var curtime = hh+':'+mm+':'+ss;
+                        
+                        console.log('update!');
+                        
+                        $('#realTime').html( today+curtime +' 업데이트됨 <i class="xi-sync"></i>');
+                    }
+                })
+            }
             
             
             
@@ -469,6 +512,7 @@
 //                        $('#msg').text(data.body);
                     }
                 }); 
+                
                 $.ajax({
                     url: subway_url+'2',
                     type: 'GET',
@@ -541,7 +585,12 @@
                 // 4 : 기숙사
                 
                 getTimetable(url, 0);
-
+ 
+                // 페달로
+                getPedalroTime();
+                
+                
+                // UI/UX
                 
                 $("#hide_rocation").hide();
                 $("#rocation").click(function(){
@@ -584,6 +633,10 @@
                     $('#contents').html(' ');
                     getTimetable(url, 4);
                     $('#current_rocation').text('기숙사');
+                });
+                $('#pedalro').click(function(){
+                    getPedalroTime();
+                    console.log('click!');
                 });
                 
             })
@@ -664,6 +717,27 @@
                         <br>
                         <h6 style="text-align: center;">지하철 서비스는 Beta 버전이므로 실제 시각과는 차이가 있을 수 있습니다.</h6>
                     </div>
+                </div>
+            </div>
+            
+            <div class="mainCard" id="pedalro">
+                <div class="slide">
+                    <h2>Pedalro</h2>
+                    <br>
+                    <p>한양대학교 근처 안산 페달로 정류장의 남은 자전거 정보를 실시간으로 확인 할 수 있습니다.</p>
+                    <br><br>
+                    <div class="left">
+                        <h3>한양대 사거리</h3>
+                        <h1 id="bicycle_hanyang" style="width:100%; text-align: center;"></h1>
+                    </div>
+                    <div class="right">
+                        <h3>한양대 기숙사</h3>
+                        <h1 id="bicycle_dorm" style="width:100%; text-align: center;"></h1>
+                    </div>
+                    <div class="clear"></div>
+                    <br>
+                    <br>
+                    <h5 id="realTime" class="right"><i class="xi-sync"></i></h5>
                 </div>
             </div>
             

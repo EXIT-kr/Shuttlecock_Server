@@ -1,5 +1,8 @@
 var express = require('express');
+// Need to send requst to webBrowser
 var request = require('request');
+// HTML Node js parser
+var cheerio = require('cheerio');
 var FB = require('fb');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -75,18 +78,16 @@ var post_id_list = [];
 //})
 
 
-
-var options = {
-    url: 'http://apis.skplanetx.com/weather/forecast/3hours?lon=126.8112500000&village=&county=&lat=37.3048100000&city=&version=1',
-    headers: {
-        'x-skpop-userId' : 'kbk9288@gmail.com',
-        'Accept': 'application/json',
-        'appKey': '7d604ba2-e3d2-3fb5-b516-505ee8db19f2'
-    }
-};
-
-
+// Weather API
 app.get('/weather', function(req, res){
+    var options = {
+        url: 'http://apis.skplanetx.com/weather/forecast/3hours?lon=126.8112500000&village=&county=&lat=37.3048100000&city=&version=1',
+        headers: {
+            'x-skpop-userId' : 'kbk9288@gmail.com',
+            'Accept': 'application/json',
+            'appKey': '7d604ba2-e3d2-3fb5-b516-505ee8db19f2'
+        }
+    };
     request.get(options, function(err, weather_res, next){
         if(err) console.log(err);
         else{
@@ -98,7 +99,49 @@ app.get('/weather', function(req, res){
 
 
 
+// 안산시 페달로
 
+app.get('/pedalro', function(req, res){
+    var url = 'http://www.pedalro.kr/station/station.do?method=stationState&menuIdx=st_01';
+    request.get(url, function(err, pedalro_res, next){
+        if(err) console.log(err);
+        else{
+            var $ = cheerio.load(pedalro_res.body);
+            var test = $('td.style1 > a').eq(20).text();
+            var test2 = $('td.style1').eq(68).text().trim();
+            var test3 = $('td.style1').eq(69).text().trim();
+            var test4 = $('td.style1').eq(70).text().trim();
+            
+            console.log($('td.style1').eq(215).text().trim());
+            console.log($('td.style1').eq(216).text().trim());
+            console.log($('td.style1').eq(217).text().trim());
+//            for(var name in test.text()){
+//                console.log(name);
+//            }
+            console.log(test);
+            console.log(test2);
+            console.log(test3);
+            console.log(test4);
+//            console.log(test5);
+            
+            var data = [{
+                            rocation: $('td.style1').eq(68).text().trim(),
+                            max_val: $('td.style1').eq(69).text().trim(),
+                            val: $('td.style1').eq(70).text().trim()
+                        },
+                        {
+                            rocation: $('td.style1').eq(215).text().trim(),
+                            max_val: $('td.style1').eq(216).text().trim(),
+                            val: $('td.style1').eq(217).text().trim()
+                        }
+                       ]
+            res.send(data);
+        }
+    })
+})
+
+
+// Facebook Graph API
 var url = '?fields=comments{from,message,like_count},likes,full_picture,message,attachments,updated_time'
 //var url = '?fields=attachments'
 
