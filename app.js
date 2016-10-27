@@ -101,6 +101,14 @@ app.get('/weather', function(req, res){
 // 한양대학교 학식 크롤링
 
 app.get('/food',function(req, page_res){
+    
+    var d = new Date();
+    var month = d.getMonth();
+    var date = d.getDate();
+    var year = d.getFullYear();
+    console.log(year);
+    var place = 255;
+    
     console.log(req.query);
     
     var place = req.query.placeCode;
