@@ -117,7 +117,7 @@ app.get('/weather', function(req, res){
             };
             var parseData = xmlParser.toJson(weather_res.body, parseOptions).rss.channel.item.description.body.data;
             var timeRelease = xmlParser.toJson(weather_res.body, parseOptions).rss.channel.item.description.header.tm;
-//            console.log(parseData);
+            console.log(parseData);
             res.send({time : timeRelease, data : parseData});
         }
         
@@ -128,12 +128,12 @@ app.get('/weather', function(req, res){
 
 
 
-
+// 한양대학교 학식 페이지 이동
 app.get('/food_view', function(req, res){
-    res.render('food')
+    res.render('food');
 })
-// 한양대학교 학식 크롤링
 
+// 한양대학교 학식 크롤링
 app.get('/food',function(req, page_res){
     
     var d = new Date();
