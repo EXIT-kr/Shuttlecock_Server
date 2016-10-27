@@ -144,7 +144,6 @@
             .bx-viewport{
                 
             }
-            
             .slidesjs-pagination {
               margin: 6px 0 0;
               float: right;
@@ -374,78 +373,67 @@
                     subway_url += "1/";
 				}
                 
-                // 날씨 정보
+                
+                
+                
                 $.ajax({
-                    url: '/weather',
+                    url: 'weather',
                     type: 'GET',
                     dataType: 'json',
                     success: function(data){
-                        console.log(data);
-                        
-                        //error
-                        if(data.result.code != '9200'){
-                            $('#weather_img').attr('src','images/weather/sunny_icon.png');
-                            $('#weather').css('background-image','url(images/weather/sunny_bg.jpg)');
-                            $('#weather_msg').html('날씨 서버 상태가 좋지 않습니다. <br>빠른 시간 내에 정상화 하도록 하겠습니다');
-                        }
+                        var timeRelease = data.time.slice(0,4) + '-' +data.time.slice(4,6) + '-' + data.time.slice(6,8) + ' ' +data.time.slice(8,10) + ':' + data.time.slice(10,12);
+                        var temperature = data.data[0].temp;
+                        var current_sky = data.data[0].wfKor;
                         
                         
-                        console.log(data.weather.forecast3hours['0'].sky.code1hour);
-                        console.log(data.weather.forecast3hours['0'].sky.code2hour);
-                        console.log(data.weather.forecast3hours['0'].sky.code3hour);
-                        
-                        var temperature = data.weather.forecast3hours['0'].temperature.temp1hour;
-                        $('#temperature').text(temperature.slice(0, temperature.length-1) + " °C");
-                        
-                        var timeRelease = data.weather.forecast3hours['0'].timeRelease;
+                        $('#temperature').text(temperature + " °C");
                         $('#timeRelease').html(timeRelease + ' 업데이트됨 <i class="xi-sync"></i>');
-                        var current_sky = data.weather.forecast3hours['0'].sky.code1hour;
                         
-                        // 맑음
-                        if(current_sky == 'SKY_V01'){
+                        if(current_sky == '맑음'){
                             $('#weather_img').attr('src','images/weather/sunny_icon.png');
                             $('#weather').css('background-image','url(images/weather/sunny_bg.jpg)');
-                            $('#weather_msg').html('오늘은 맑은 하루가 예상됩니다! <br>기분 좋은 하루되세요')
+                            $('#weather_msg').html('오늘은 맑은 하루가 예상됩니다! <br>기분 좋은 하루되세요'); 
                         }
-                        // 구름 조금
-                        else if(current_sky == 'SKY_V02'){
+                        else if(current_sky == '구름 조금'){
                             $('#weather_img').attr('src','images/weather/little_cloud_icon.png');
                             $('#weather').css('background-image','url(images/weather/sunny_bg.jpg)');
                             $('#weather_msg').html('오늘은 조금 흐릴거에요 <br>가끔은 이런 날씨도 좋지 않나요?');
                         }
-                        // 흐림
-                        else if(current_sky == 'SKY_V03' || current_sky == 'SKY_V07'){
+                        else if(current_sky == '구름 많음'){
+                            $('#weather_img').attr('src','images/weather/little_cloud_icon.png');
+                            $('#weather').css('background-image','url(images/weather/sunny_bg.jpg)');
+                            $('#weather_msg').html('오늘은 구름이 조금 많아요 <br>가끔은 이런 날씨도 좋지 않나요?');
+                        }
+                        else if(current_sky == '흐림'){
                             $('#weather_img').attr('src','images/weather/cloud_icon.png');
                             $('#weather').css('background-image','url(images/weather/sunny_bg.jpg)');
                             $('#weather_msg').html('오늘은 많이 흐려요 <br>감기 걸리지 않게 조심하세요');
                         }
-                        // 비
-                        else if(current_sky == 'SKY_V04' || current_sky == 'SKY_V08'){
+                        else if(current_sky == '비'){
                             $('#weather_img').attr('src','images/weather/rain_icon.png');
                             $('#weather').css('background-image','url(images/weather/rain_bg.jpg)');
                             $('#weather_msg').html('오늘은 비 소식이 있어요 <br>우산을 준비하는게 어떨까요?');
                         }
-                        // 눈
-                        else if(current_sky == 'SKY_V05' || current_sky == 'SKY_V09'){
-                            $('#weather_img').attr('src','images/weather/snow_icon.png');
-                            $('#weather').css('background-image','url(images/weather/rain_bg.jpg)');
-                            $('#weather_msg').html('오늘은 눈이 온데요! <br>미끄러지지 않게 조심하세요');
-                        }
-                        // 진눈깨비
-                        else if(current_sky == 'SKY_V06' || current_sky == 'SKY_V10'){
+                        else if(current_sky == '눈/비'){
                             $('#weather_img').attr('src','images/weather/rain_snow_icon.png');
                             $('#weather').css('background-image','url(images/weather/rain_bg.jpg)');
                             $('#weather_msg').html('오늘은 진눈깨비가 와요 <br>우산을 꼭 챙기세요!');
                         }
-                        // 벼락
-                        else if(current_sky == 'SKY_V11' || current_sky == 'SKY_V12' || current_sky == 'SKY_V13' || current_sky == 'SKY_V14'){
-                            $('#weather_img').attr('src','images/weather/lightning_icon.png');
+                        else if(current_sky == '눈'){
+                            $('#weather_img').attr('src','images/weather/snow_icon.png');
                             $('#weather').css('background-image','url(images/weather/rain_bg.jpg)');
-                            $('#weather_msg').html('오늘은 벼락이 친데요!<br>큰 비가 올지도 몰라요');
+                            $('#weather_msg').html('오늘은 눈이 온데요! <br>미끄러지지 않게 조심하세요');
                         }
-                        
+                        // 벼락
+                        // $('#weather_img').attr('src','images/weather/lightning_icon.png');
+                        // $('#weather').css('background-image','url(images/weather/rain_bg.jpg)');
+                        // $('#weather_msg').html('오늘은 벼락이 친데요!<br>큰 비가 올지도 몰라요');
                     }
                 })
+                
+                
+                
+                
                 
                 // 한대앞역 정보
                 $.ajax({
@@ -754,6 +742,8 @@
                     <p id="weather_msg"></p>
                     <br>
                     <h5 id="timeRelease" class="right"><i class="xi-sync"></i></h5>
+                    <br>
+                    <h5 class="right">정보 제공 : 대한민국 기상청</h5>
                     <div class="clear"></div>
                 </div>
             </div>
