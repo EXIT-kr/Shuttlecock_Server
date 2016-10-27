@@ -98,6 +98,69 @@ app.get('/weather', function(req, res){
 });
 
 
+// 한양대학교 학식 크롤링
+
+app.get('/food',function(req, page_res){
+    console.log(req.query);
+    
+    var place = req.query.placeCode;
+    var year = req.query.year;
+    var month = req.query.month;
+    var date = req.query.date;
+    
+    console.log(place);
+    var url = 'http://www.hanyang.ac.kr/web/www/-'+place+'?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay='+date+'&_foodView_WAR_foodportlet_sFoodDateYear='+year+'&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth='+month;
+    
+    console.log(url);
+    
+    var sendData = {};
+    request.get(url, function(err, res, next){
+        if(err) console.log(err);
+        else{
+
+            var $ = cheerio.load(res.body);
+            var place = $('.sub-head').children('h3').text();
+            var list = $('.d-title2');
+            var type = $('.thumbnails');
+            var day = $('.day-selc');
+            day = day.text().replace(/\t/gi,'').replace(/\r/gi,'').split('\n');
+            day = day[2]+' '+day[3];
+            console.log(day);
+            console.log(place);
+            
+            sendData.place = place;
+            sendData.day = day;
+            sendData.data = [];
+
+            for(var i = 0; i < type.length; i++){
+                var title = $(list[i]).text();
+
+                sendData.data.push({});
+                var currentData = sendData.data[i];
+                currentData.type = title;
+                currentData.menus = [];
+
+                var element = $(type[i]).children('.span3').children('.thumbnail');;
+                for(var j = 0; j < element.length; j++){
+
+                    var set = {};
+                    var temp = $(element[j])
+                    var menu = temp.children('h3').text();
+                    var price = temp.children('.price').text();
+                    set.menu = menu;
+                    set.price = price;
+                    console.log(set);
+                    currentData.menus.push(set);
+                }  
+            }
+
+        }
+        console.log(sendData);
+        page_res.send(sendData);
+    })
+})
+
+
 
 // 안산시 페달로
 
