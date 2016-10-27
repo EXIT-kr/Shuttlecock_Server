@@ -98,6 +98,9 @@ app.get('/weather', function(req, res){
 });
 
 
+app.get('/food_view', function(req, res){
+    res.render('food')
+})
 // 한양대학교 학식 크롤링
 
 app.get('/food',function(req, page_res){
