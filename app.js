@@ -4,7 +4,7 @@ var request = require('request');
 // HTML Node js parser
 var cheerio = require('cheerio');
 // XML to Json Parser
-var xmlParser = require('xml2json');
+//var xmlParser = require('xml2json');
 var FB = require('fb');
 var path = require('path');
 var favicon = require('serve-favicon');
