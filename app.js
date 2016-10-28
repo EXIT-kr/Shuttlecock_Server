@@ -103,27 +103,27 @@ var post_id_list = [];
 
 
 // Weather API
-app.get('/weather', function(req, res){
-    request.get('http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=4127153500', function(err, weather_res, next){
-        if(err) console.log(err);
-        else{
-            var parseOptions = {
-                object: true,
-                reversible: false,
-                coerce: false,
-                sanitize: true,
-                trim: true,
-                arrayNotation: false
-            };
-            var parseData = xmlParser.toJson(weather_res.body, parseOptions).rss.channel.item.description.body.data;
-            var timeRelease = xmlParser.toJson(weather_res.body, parseOptions).rss.channel.item.description.header.tm;
-            console.log(parseData);
-            res.send({time : timeRelease, data : parseData});
-        }
-        
-    });
-    
-})
+//app.get('/weather', function(req, res){
+//    request.get('http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=4127153500', function(err, weather_res, next){
+//        if(err) console.log(err);
+//        else{
+//            var parseOptions = {
+//                object: true,
+//                reversible: false,
+//                coerce: false,
+//                sanitize: true,
+//                trim: true,
+//                arrayNotation: false
+//            };
+//            var parseData = xmlParser.toJson(weather_res.body, parseOptions).rss.channel.item.description.body.data;
+//            var timeRelease = xmlParser.toJson(weather_res.body, parseOptions).rss.channel.item.description.header.tm;
+//            console.log(parseData);
+//            res.send({time : timeRelease, data : parseData});
+//        }
+//        
+//    });
+//    
+//})
 
 
 
