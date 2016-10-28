@@ -14,5 +14,8 @@
     "morgan": "~1.7.0",
     "nodemon": "^1.10.2",
     "serve-favicon": "~2.3.0"
-  }
+  },
+    "engines": {
+        "node": "6.7.0"
+    }
 }
