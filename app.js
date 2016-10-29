@@ -5,6 +5,10 @@ var request = require('request');
 var cheerio = require('cheerio');
 // XML to Json Parser
 var xmlParser = require('xml2json');
+
+// XML to js Parser
+var xml2js = require('xml2js').parseString;
+
 var FB = require('fb');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -115,10 +119,25 @@ app.get('/weather', function(req, res){
                 trim: true,
                 arrayNotation: false
             };
-            var parseData = xmlParser.toJson(weather_res.body, parseOptions).rss.channel.item.description.body.data;
-            var timeRelease = xmlParser.toJson(weather_res.body, parseOptions).rss.channel.item.description.header.tm;
-            console.log(parseData);
-            res.send({time : timeRelease, data : parseData});
+            
+            
+            
+            
+            xml2js(weather_res.body, function(err, parseResult){
+                
+                console.log(parseResult.rss.channel[0].item[0].description[0]);
+                
+                var parseData = parseResult.rss.channel[0].item[0].description[0].body[0].data;
+                var timeRelease = parseResult.rss.channel[0].item[0].description[0].header[0].tm[0];
+                console.log(timeRelease);
+                res.send({time : timeRelease, data : parseData});
+            });
+            
+            
+            
+            
+//            console.log(parseData);
+            
         }
         
     });
