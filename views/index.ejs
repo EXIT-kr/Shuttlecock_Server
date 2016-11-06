@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta name="theme-color" content="#eeeeee">
     <head>
-        
+        <!--Jquery-->
         <script src="https://code.jquery.com/jquery-1.12.1.js"></script>
         <link rel="stylesheet" href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css">
         <!-- aweswome Icon -->
@@ -208,6 +208,16 @@
                         curData = data.Dorm;
                         arrive = "순환버스"
                         icon = '<i class="xi-refresh"></i>'
+                    }
+                    else if(type == 5){
+                        curData = data.shuttle_opposite;
+                        arrive = "제 2공학관"
+                        icon = '<i class="xi-home"></i>'
+                    }
+                    else if(type == 6){
+                        curData = data.engin2;
+                        arrive = "셔틀콕"
+                        icon = '<i class="xi-home"></i>'
                     }
                     
                     
@@ -622,6 +632,16 @@
                     getTimetable(url, 4);
                     $('#current_rocation').text('기숙사');
                 });
+                $('#btn_home_opposite').click(function(){
+                    $('#contents').html(' ');
+                    getTimetable(url, 5);
+                    $('#current_rocation').text('셔틀콕 반대편');
+                });
+                $('#btn_engine').click(function(){
+                    $('#contents').html(' ');
+                    getTimetable(url, 6);
+                    $('#current_rocation').text('제 2공학관');
+                });
                 $('#pedalro').click(function(){
                     getPedalroTime();
                     console.log('click!');
@@ -647,8 +667,11 @@
             <div id="hide_rocation">
                 <h4 id="btn_home">셔틀콕 → 한대앞역</h4>
                 <h4 id="btn_home_to_term">셔틀콕 → 예술인APT</h4>
+                <h4 id="btn_home_opposite">셔틀콕 반대편</h4>
+                <h4 id="btn_engine">제 2공학관</h4>
                 <h4 id="btn_subway">한대앞역</h4>    
-                <h4 id="btn_terminal">예술인APT</h4>    
+                <h4 id="btn_terminal">예술인APT</h4>
+                
                 <h4 id="btn_dorm">기숙사</h4>    
             </div>
         </div>

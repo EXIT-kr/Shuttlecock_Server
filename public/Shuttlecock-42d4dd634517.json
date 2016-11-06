@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "shuttlecock-62d97",
+  "private_key_id": "42d4dd6345175f21f2b6e314d875b513b771507d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDeN/65BCAErBv+\nsYOqYFut6ytJ1uCCmyyDn6Do3RpYg4vcRNRUlR+sWaWvdRveGISkZKypMZViI4XG\nlZKSHL7ZN/UyDyv+zh6BpyL2hjZ3wbSocJo9wKdtsXDTIML+tnrYA2mDjk5ESMpg\nHbDIWTYsaY5XBzzfzk1cz8OqWQ1rcOs0GLCCCSII900RrV2IAZD3jyPsZ8og1ev8\nGLlEOS1LpGMudKHw+/xMQSdqAaEMge1orGeoUoR0eKlXyf+VZ7lRipu4hTGzO+S3\nQTqyybzjb2+bHUxD73a2MM6GJjz1rtaUYmheqcyozuEy9xyD4vSqsOZoHWg3Kq7v\n0NIMlaoLAgMBAAECggEBANvdlUbkAPX+gBho9Lf/bNZQh10goLQ46js1FpUwJqAL\nT7dZ1qf1gAgcDuXiPfdqVNr+zSL+bypRsUvBs+qjTGVJi23DOyl6MQ7hGqPGOWAW\nJTQ/bSzKUB4lYVdT4/r2++Z8wcorY98GEk41MjOYqRQaQH51J9LcoQjCfHswbyms\nEA2TI5BZlEVlZpnRxjUC26TzEuPU/DVWSIxX9TJ2mMBmxCcxi1lEe4PWvW40JxVr\nNVj32YqfNoFjyHhxx8V9lhs6joOAZCMTC5q1m/lKIcU81rSDBdnkvuSSLZd0iJ3S\nkMoPlbv6lp+1DBjI9mvObCNv9zsHcK99qFQZH7Tf1MkCgYEA/QbwiwsoqpKvGnCc\nQ/ApUDI8GZ5/b4sjT4bu4xvg7tt17Rg0wZL5bDGOzst22NVfkLmdqGKWwy3BYmtx\n9j+xTiGx2Qt8eUrer2PVEwcjPUifHJDImzpMjq5vO4YrpdINAOrg5dr7ufmbxQEF\nrKXdX2AgijMEKbVAjauTV1PYvJUCgYEA4NRjqGznU2i1yUqx6eTv4RJ1H7sAzbsU\nUA21RhPlF4DI45Kr/oDG2KrOMr8TRGW6MvHkeVPrZyIX2XzfBonfQiTtii8Mxbz8\nGMNY7O6/Be8T0c8lwJvfLGN80rnaopAzjYOScpH0ZHA277/LX59G4yBoIqZK/nef\n7pdN4lMyhB8CgYABlD6CD6LEVcAEATnobqJDXtzjKAsRjiO9RlFNV4oy02nL/f+u\nSZWG6FRE1B48wjAjfhUOzPa15x4y2ArRB5q6qxkqCplPRHlZTN0yjjPZGQ/tJLYr\nydRae5o0G+U/1qzAGbcnmBNEGNuxAg2gAzT7eGUbl6/p9ridabm0rNBIdQKBgQCe\nUjHTeszzGXtZwjXC5Speria4L3GDbkgBj4WlUYEzqcbNKo3fbEOac708Uv14XsJd\n+aTQI15Tg9iTmLFc413KMELt2e/+lvRXY8iNIBp4TUEBsAN/vMPNeEmAAsyJSU5k\nStCnyUv2JmcpMUA/l+PNMRbjv4Jz6z0+QGHiDIA4NQKBgQCryriNhSKzEeGhceyT\nzJC2d3lAZ1kxAQelNj3eP4dC3oOmK11c57byExM/y4kT1y8L0oTWYGEr0oaqS4tY\nuJ9XgD8sgt722M3vUkgC7PB0LQKZFo1a75smM0zbWOScIDQWSn8bYbeGr4NiTBoM\ndHgwsDElp188FdShMECg+m87PQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "shuttlecock@shuttlecock-62d97.iam.gserviceaccount.com",
+  "client_id": "110641616575126421003",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/shuttlecock%40shuttlecock-62d97.iam.gserviceaccount.com"
+}

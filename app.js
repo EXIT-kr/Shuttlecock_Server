@@ -9,6 +9,9 @@ var cheerio = require('cheerio');
 // XML to js Parser
 var xml2js = require('xml2js').parseString;
 
+// Firebase
+var firebase = require('firebase');
+
 var FB = require('fb');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -25,6 +28,10 @@ var app = express();
 // Facebook AccessToken
 FB.setAccessToken('607442856100225|1PKH0ji8fyGRDC96ZGWkuQw8YHk');
 console.log('Facebook AccessToken Success');
+
+// Firebase Access
+
+
 
 
 // view engine setup
@@ -104,6 +111,9 @@ var post_id_list = [];
 
 
 
+app.get('/test', function(req, res){
+    res.render('test');
+})
 
 
 // Weather API
@@ -121,8 +131,6 @@ app.get('/weather', function(req, res){
             };
             
             
-            
-            
             xml2js(weather_res.body, function(err, parseResult){
                 
                 console.log(parseResult.rss.channel[0].item[0].description[0]);
@@ -131,18 +139,10 @@ app.get('/weather', function(req, res){
                 var timeRelease = parseResult.rss.channel[0].item[0].description[0].header[0].tm[0];
                 console.log(timeRelease);
                 res.send({time : timeRelease, data : parseData});
-            });
-            
-            
-            
-            
-//            console.log(parseData);
-            
-        }
-        
-    });
-    
-})
+            });   
+        } 
+    }); 
+});
 
 
 
