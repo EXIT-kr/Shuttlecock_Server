@@ -110,6 +110,13 @@ var post_id_list = [];
 //});
 
 
+app.get('/keyboard', function(req, res){
+    res.send({
+        "type" : "buttons",
+        "buttons" : ["선택 1", "선택 2", "선택 3"]
+    })
+})
+
 
 app.get('/test', function(req, res){
     res.render('test');
@@ -145,12 +152,16 @@ app.get('/weather', function(req, res){
 });
 
 
-
+// 공지사항
+app.get('/notice', function(req, res){
+    res.render('notice');
+})
 
 // 한양대학교 학식 페이지 이동
 app.get('/food_view', function(req, res){
     res.render('food');
 })
+
 
 // 한양대학교 학식 크롤링
 app.get('/food',function(req, page_res){

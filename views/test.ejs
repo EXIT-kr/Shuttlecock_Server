@@ -8,9 +8,11 @@
         <!--Angular js-->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
         <!--Firebase-->
-        
-        <script src="https://www.gstatic.com/firebasejs/3.5.3/firebase.js"></script>
         <script src="https://cdn.firebase.com/libs/angularfire/2.1.0/angularfire.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/3.5.3/firebase.js"></script>
+        <script type="text/javascript" src="http://jsgetip.appspot.com"></script>
+
+        
 
         <script>
           // Initialize Firebase
@@ -52,106 +54,83 @@
             }
             
             
-            
-            
             var newUIDKey;
             var app = angular.module("Shuttlecock", ["firebase"]);
             
             app.controller("SampleCtrl", function($scope, $firebaseArray, $firebaseObject) {
                 
                 var newUIDKey = firebase.database().ref().child('users').push().key;
+                var FaceID = Math.floor((Math.random() * 5)+1);
+                
                 console.log(newUIDKey + ' Login')
                 
                 $scope.newUIDKey = newUIDKey;
+                $scope.FaceID = FaceID;
                 
-                var ref = firebase.database().ref().child('posts');
+                var ref = firebase.database().ref('/posts')
 
                 console.log(ref);
                 // create a synchronized array
-                $scope.messages = $firebaseArray(ref);
-                
-                console.log($firebaseArray(ref));
+                $scope.posts = $firebaseArray(ref);
+//                $scope.comments = $firebaseArray(ref);
+
+                console.log($scope.posts);
                 console.log($scope.newUIDKey);
 
                 // add new items to the array
                 // the message is automatically added to our Firebase database!
-                $scope.addMessage = function() {
-                    $scope.messages.$add({
-                        text: $('#main').val(),
+                
+                $scope.addPost = function() {
+                    $scope.posts.$add({
+                        title: $scope.title_input,
+                        text: $scope.main_input,
                         author_key: newUIDKey,
-                        date: getTodayDate()
+                        timeStamp: getTodayDate(),
+                        ip: ip()
                     })
 //                    $("#add").slideDown('fast').delay(1200).fadeOut(800);
                 };
                 
-                $scope.removeMsg = function(arr, obj, msgs, msg){
-                    
-                    
-                    var ref = firebase.database().ref().child('posts').child(msg.$id).child('comments');
-                    var list = $firebaseArray(ref);
-//                    list.$add({foo:'fuck'});
-                    console.log(list.$keyAt(0))
-//                    console.log(list.$destory);
-//                    console.log(list.keyAt())
-//                    console.log(list['0']);
-//                    console.log('fuck2');
+                $scope.removePost = function(post){
+                    $scope.posts.$remove(post);
+                }
+                
+                
+                $scope.addComment = function(msg, index){
 
-                    
-//                    console.log($firebaseArray(ref));
-//                    
-//                    console.log(msgs);
-//                    console.log(msg);
-//                    console.log(arr);
-//                    console.log(obj);
-//                    console.log(arr[obj.key])
-                    
-//                    console.log($firebaseObject(obj));
-//                    $firebaseObject(obj).$remove();
-                    
-//                    $("#remove").slideDown('fast').delay(1200).fadeOut(800);
-                }
-                
-                $scope.consoleMsg = function(msg){
-                    var ref = firebase.database().ref().child('posts').child(msg.$id).child('comments');
-                    $scope.comments = $firebaseArray(ref);
-                    
-//                    var newid = ref.push().key;
-//                    
-//                    var updates = {};
-//                    updates['/posts/'+msg.$id+'/comments/'+ newid] = {
-//                        msg: msg.input,
-//                        comment_author_key: newUIDKey,
-//                        date: getTodayDate(),
-//                        character: Math.floor((Math.random() * 5)+1),
-//                        key: newid
-//                    }
-//                    return firebase.database().ref().update(updates);
-                    
-                    
+                    var ref = firebase.database().ref('/posts/'+index+'/comments');
+                    $scope.comments = $firebaseArray(ref)
                     $scope.comments.$add({
-                        msg: msg.input,
+                        msg: msg,
                         comment_author_key: newUIDKey,
-                        date: getTodayDate(),
-                        character: Math.floor((Math.random() * 5)+1),
-                    }).then(function(ref){
-                        var id = ref.key;
-                        console.log("added record with id " + id);
-                        console.log($scope.comments.$indexFor(id));
+                        timeStamp: getTodayDate(),
+                        character: FaceID,
+                        ip: ip()
                     })
-                    console.log(msg.input);
+                    
+                    
                 }
                 
-                
-                
-                $scope.removePost = function(arr, obj){
-                    var arr = $firebaseArray(arr);
-                    arr.$remove(arr[2]);
+                $scope.removeComment = function(parrent_id, comment, key){
+                    
+                    var ref = firebase.database().ref('posts/'+parrent_id+'/comments/'+key);
+                    $scope.comments = $firebaseObject(ref)
+                    $scope.comments.$remove(comment).catch(function(err){
+                        console.log(err);
+                    });   
+                    
+//                    var ref = firebase.database().ref('posts/'+parrent_id+'/comments/');
+//                    $scope.comments = $firebaseArray(ref)
+//                    console.log($scope.comments);
+//                    $scope.comments.$remove(comment).catch(function(err){
+//                        console.log(err);
+//                    });   
                 }
+                
               // click on `index.html` above to see $remove() and $save() in action
             });
         
             $(document).ready(function(){
-                
                 
 //                $('div').click(function(){
 //                    var newPostKey = firebase.database().ref().child('posts').push().key;
@@ -167,56 +146,86 @@
             })
         </script>
         <style>
-            ul{
-                  list-style: none;
-              }
-              li{
-                  list-style: none;
-              }
-
-              .card{
+            .card{
                 width: 80%;
                 padding:1.5rem;
                 box-shadow:0 1px 2px #aaa;
                 background:white;
                 margin: 20px auto;
                 border-radius:3px;
-              }
+            }
+            .comment{
+                color: #666;
+            }
+            .comment > .name{
+                font-size: 14px;
+                line-height: 20px;
+                display:inline-block
+            }
+            .comment > .timeStamp{
+                font-size: 8px;
+                line-height: 20px;
+                display:inline-block
+            }
+            .comment_msg{
+                color: #666;
+                margin-top: 3px;
+                padding-left: 10px;
+            }
+            .left{
+                float: left;
+            }
+            .right{
+                float: right;
+            }
             .clear{
                 clear: both;
             }
         </style>
     </head>
     <body ng-controller="SampleCtrl">
-        <input id="main" type="text">
-        <div ng-click="addMessage()">test</div>
+        <input type="text" ng-model="title_input" placeholder="title">
+        <textarea type="text" ng-model="main_input" placeholder="msg"></textarea>
+        <div ng-click="addPost()">test</div>
         
-        <li class="card" ng-repeat="message in messages" >
+        <div class="card" ng-repeat="post in posts" >
             <!-- edit a message -->
-            <h2 style="float:left; color:#444444;" ng-model="message.text">{{message.text}}</h2>
-            <input type="text" ng-model="message.input">
-            <button ng-click="consoleMsg(message)">test</button>
+            <h2 style="color:#444444;">{{post.title}}</h2>
+            <p>{{post.text}}</p>
+            
+            
             <!-- delete a message -->
-            <div style="float:right" ng-if="message.author_key == newUIDKey">
+            <div style="float:right" ng-if="post.author_key == newUIDKey">
                 <a class="btn"> 
 <!--                    <i class="xi-close-circle" style="color:#882222" ng-click="messages.$remove(message); removeMsg(messages);"></i>-->
-                    <i class="xi-close-circle" style="color:#882222" ng-click="removePost(messages, message);"></i>
+                    <i class="xi-close-circle" style="color:#882222" ng-click="removePost(post);"></i>
                 </a>
             </div>
             <div style="clear:both;"></div>
-            <div ng-repeat="comment in message.comments">
-                <img src="/images/character/face0{{comment.character}}.png" height="24px">
-                <p>{{comment.msg}}</p>
-<!--                <div style="float:right" ng-if="comment.comment_author_key == newUIDKey">-->
-                <div style="float:right">
-
-                    <a class="btn"> 
-                        <i class="xi-close-circle" style="color:#882222" ng-click="removeMsg(message.comments, comment, messages, message); message.comments.$remove(comment) ;"></i>
-                    </a>
+            
+            <input type="text" ng-model="post.input">
+            <button ng-click="addComment(post.input, post.$id)">test</button>
+            <br>
+            <br>
+            <br>
+            <div>
+                <div ng-repeat="(key, comment) in post.comments">
+                    <!--                <div style="float:right" ng-if="comment.comment_author_key == newUIDKey">-->
+                    
+                    <div class="comment left">
+                        <img src="/images/character/face0{{comment.character}}.png" height="24px">
+                        <b><span class="name">익명{{comment.comment_author_key.slice(15)}}</span></b>
+                        <span class="timeStamp"> {{comment.timeStamp}}</span>
+                        <i class="xi-close-circle" style="color:#882222" ng-click="removeComment(post.$id, comment, key)"></i>
+                        
+                    </div>
+                    <div class="clear"></div>
+                    <p class="comment_msg">{{comment.msg}}</p>
+    
+                    
                 </div>
-                <div class="clear"></div>
             </div>
-        </li>
+        </div>
         
     </body>
 </html>

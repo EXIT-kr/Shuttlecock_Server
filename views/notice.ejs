@@ -1,0 +1,417 @@
+<!Doctype html>
+<html ng-app="Shuttlecock">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta name="theme-color" content="#eeeeee">
+    <head>
+        <!--Jquery-->
+        <script src="https://code.jquery.com/jquery-1.12.1.js"></script>
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css">
+        <!-- aweswome Icon -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <script src="/javascripts/jquery.slides.js"></script>
+        <script src="/javascripts/jquery.bxslider/jquery.bxslider.js"></script>
+        <link href="/javascripts/jquery.bxslider/jquery.bxslider.css" rel="stylesheet" />
+        <!--countDown-->
+		<script src="countdown/jquery.countdown.js"></script>
+        
+        <!--Angular js-->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+        <!--Firebase-->
+        <script src="https://cdn.firebase.com/libs/angularfire/2.1.0/angularfire.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/3.5.3/firebase.js"></script>
+        <script type="text/javascript" src="http://jsgetip.appspot.com"></script>
+        
+        
+        
+        <title>셔틀콕</title>
+        <style>
+            @import url(https://cdn.rawgit.com/theeluwin/NotoSansKR-Hestia/master/stylesheets/NotoSansKR-Hestia.css);
+            *{
+                margin: 0 auto;
+                font-family:'Noto Sans Korean';
+                font-weight: 400;
+                box-sizing: border-box;
+            }
+            a{
+                text-decoration: none;
+                color : inherit;
+            }
+            body{
+                background: #eee;
+            }
+            #title{
+                padding: 10px;
+                background: white;
+                box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+            }
+            #rocation{
+                
+/*                background: #323742;*/
+                color: white;
+                text-align: center;
+            }
+            #rocation span{
+                padding: 12px 0px;
+            }
+            #hide_rocation{
+                background: #323742;
+                text-align: left;
+                padding: 10px 20px;
+                -webkit-transform: translate3d(0, 0, 0);
+            }
+            #hide_rocation > h4{
+                padding: 5px 0px;
+            }
+            #meal{
+                background-image: url(images/meal2.jpg);
+                background-size: cover;
+                color: white;
+                font-weight: 400;
+/*                -webkit-filter: brightness(0.25);*/
+            }
+            #weather{
+                background-image: url(images/weather/rain_bg.jpg);
+                background-size: cover;
+                color: white;
+                font-weight: 400;
+/*                -webkit-filter: brightness(0.25);*/
+            }
+            #social{
+                background-image: url(images/lion.jpg);
+                background-size: cover;
+                background-position: -30px;
+                color: white;
+                font-weight: 400;
+            }
+            #pedalro{
+                background-image: url(images/bicycle.jpg);
+                background-size: cover;
+                color: white;
+                font-weight: 400;
+            }
+                
+            #footer{
+                background: white;
+                width: 100%;
+                position: fixed;
+                bottom: 0px;
+                
+            }
+            .mainCard{
+                margin: 15px auto;
+/*                margin-top: 0px;*/
+                background: white;
+                border-radius: 3px;
+/*                padding: 15px;*/
+                width:100%;
+                right: 0px;
+                height: 400px;
+            }
+            .card{
+                margin: 15px auto;
+/*                margin-top: 0px;*/
+                background: white;
+                border-radius: 3px;
+                padding: 15px;
+            }
+            
+            .slide{
+                margin: 15px;
+            }
+            .card h1{
+                
+            }
+            .card h3{
+                font-weight: 400;
+            }
+            .right{
+                float: right;
+            }
+            .left{
+                float: left;
+            }
+            .clear{
+                clear: both;
+            }
+            .circle{
+                width: 100px;
+                height: 100px;
+                border: 7px solid #3AAEE7;
+                line-height: 86px;
+                border-radius: 100%;
+                text-align: center;
+            }
+            .bx-wrapper .bx-viewport{
+                -webkit-box-shadow: 0 0 0px #ccc;
+                border: 0px;
+                background: rgba(0,0,0, 0);
+                width: 100%;
+                padding: 0px;
+                left: 0px;
+            }
+            .bx-viewport{
+                
+            }
+            .slidesjs-pagination {
+              margin: 6px 0 0;
+              float: right;
+              list-style: none;
+            }
+            .slidesjs-pagination li {
+              float: left;
+              margin: 0 1px;
+            }
+            .slidesjs-pagination li a {
+              display: block;
+              width: 13px;
+              height: 0;
+              padding-top: 13px;
+              background-image: url(images/pagination.png);
+              background-position: 0 0;
+              float: left;
+              overflow: hidden;
+            }
+            
+            .slidesjs-pagination li a.active,
+            .slidesjs-pagination li a:hover.active {
+              background-position: 0 -13px
+            }
+
+            .slidesjs-pagination li a:hover {
+              background-position: 0 -26px
+            }
+            .comment{
+                padding: 10px 00px;
+            }
+            .comment > .timeStamp{
+                font-size: 8px;
+            }
+            .comment_msg{
+/*                margin-top: 5px;*/
+            }
+            .notice_info{
+                font-size: 8px;
+            }
+            .btn_send{
+                width: 5%;
+                display:inline-block
+            }
+            .input_comment{
+                width: 90%;
+                display:inline-block;
+                border: 1px solid #333;
+            }
+            #box_comment_input{
+                text-align: center;
+            }
+        </style>
+        
+        
+        <script>
+          // Initialize Firebase
+          var config = {
+            apiKey: "AIzaSyDuZkfPCLMbWLsZZ89Fg69PSOMVRd-yoU8",
+            authDomain: "shuttlecock-62d97.firebaseapp.com",
+            databaseURL: "https://shuttlecock-62d97.firebaseio.com",
+            storageBucket: "shuttlecock-62d97.appspot.com",
+            messagingSenderId: "637011192134"
+          };
+          firebase.initializeApp(config);
+        </script>
+        
+        <script>
+            
+            function getTodayDate(){
+                var today = new Date();
+                        
+                var yyyy = today.getFullYear();
+                var dd = today.getDate();
+                var MM = today.getMonth()+1; //January is 0!
+
+
+                var hh = today.getHours();
+                var mm = today.getMinutes();
+                var ss = today.getSeconds();
+
+                if(dd < 10) dd = '0' + dd;
+                if(MM < 10) MM = '0' + MM;
+
+                if(hh < 10) hh = '0' + hh;
+                if(mm < 10) mm = '0' + mm;
+                if(ss < 10) ss = '0' + ss;
+
+
+                var today = yyyy+'-'+MM+'-'+dd+' ';
+                var curtime = hh+':'+mm+':'+ss;
+                
+                return today+curtime;
+            }
+            
+            
+            var newUIDKey;
+            var app = angular.module("Shuttlecock", ["firebase"]);
+            
+            app.controller("SampleCtrl", function($scope, $firebaseArray, $firebaseObject) {
+                
+                var newUIDKey = firebase.database().ref().child('users').push().key;
+                var FaceID = Math.floor((Math.random() * 5)+1);
+                
+                console.log(newUIDKey + ' Login')
+                
+                $scope.newUIDKey = newUIDKey;
+                $scope.FaceID = FaceID;
+                
+                var ref = firebase.database().ref('/posts')
+
+                console.log(ref);
+                // create a synchronized array
+                $scope.posts = $firebaseArray(ref);
+//                $scope.comments = $firebaseArray(ref);
+
+                console.log($scope.posts);
+                console.log($scope.newUIDKey);
+
+                // add new items to the array
+                // the message is automatically added to our Firebase database!
+                
+                $scope.addPost = function() {
+                    $scope.posts.$add({
+                        title: $scope.title_input,
+                        text: $scope.main_input,
+                        author_key: newUIDKey,
+                        timeStamp: getTodayDate(),
+                        ip: ip()
+                    })
+//                    $("#add").slideDown('fast').delay(1200).fadeOut(800);
+                };
+                
+                $scope.removePost = function(post){
+                    $scope.posts.$remove(post);
+                }
+                
+                
+                $scope.addComment = function(msg, index){
+
+                    var ref = firebase.database().ref('/posts/'+index+'/comments');
+                    $scope.comments = $firebaseArray(ref)
+                    $scope.comments.$add({
+                        msg: msg,
+                        comment_author_key: newUIDKey,
+                        timeStamp: getTodayDate(),
+                        character: FaceID,
+                        ip: ip()
+                    })
+                }
+                
+                $scope.removeComment = function(parrent_id, comment, key){
+                    
+                    var ref = firebase.database().ref('posts/'+parrent_id+'/comments/'+key);
+                    $scope.comments = $firebaseObject(ref)
+                    $scope.comments.$remove(comment).catch(function(err){
+                        console.log(err);
+                    });   
+                }
+                
+              // click on `index.html` above to see $remove() and $save() in action
+            });
+        
+            $(document).ready(function(){
+                $("#hide_rocation").hide();
+                $("#rocation").click(function(){
+                    $("#hide_rocation").slideToggle('fast');    
+                });
+                $('#bars').click(function(){
+                    $("#hide_rocation").slideToggle('fast');    
+                });
+            })
+        </script>
+        
+        
+        
+    </head>
+    <body ng-controller="SampleCtrl">
+        <div id="title">
+            <h2 class="left" id="bars"><i class="xi-bars"></i></h2>
+<!--            <h2 class="left">셔틀콕</h2>-->
+<!--            <h2 class="right">셔틀콕</h2>-->
+            <div class="clear"></div>
+        </div>
+        
+        
+        <div id="rocation">
+            <span class="left" style="width:50%; background:#323742">현재위치</span>
+            <span id ="current_rocation" class="right" style="width:50%; background:#888">셔틀콕 (한대앞역행)</span>
+            <div class="clear"></div>
+            
+            <div id="hide_rocation">
+                <h4 id="btn_home">셔틀콕 → 한대앞역</h4>
+                <h4 id="btn_home_to_term">셔틀콕 → 예술인APT</h4>
+                <h4 id="btn_home_opposite">셔틀콕 반대편</h4>
+                <h4 id="btn_engine">제 2공학관</h4>
+                <h4 id="btn_subway">한대앞역</h4>    
+                <h4 id="btn_terminal">예술인APT</h4>
+                
+                <h4 id="btn_dorm">기숙사</h4>    
+            </div>
+        </div>
+        
+
+        
+        <div id="contents">
+            <div class="card" ng-repeat="post in posts" >
+            <!-- edit a message -->
+            <h2 style="color:#444444;">{{post.title}}</h2>
+            <div class="notice_info">
+                <span style="margin-right:15px;">글쓴이 : 셔틀콕</span> <span> {{post.timeStamp}}</span>
+                <br>
+                <br>
+            </div>
+            
+            <p>{{post.text}}</p>
+            <br>
+            <br>
+            
+            <!-- delete a message -->
+            <div style="float:right" ng-if="post.author_key == newUIDKey">
+                <a class="btn"> 
+<!--                    <i class="xi-close-circle" style="color:#882222" ng-click="messages.$remove(message); removeMsg(messages);"></i>-->
+                    <i class="xi-close-circle" style="color:#882222" ng-click="removePost(post);"></i>
+                </a>
+            </div>
+            <div style="clear:both;"></div>
+                
+            <div id="box_comment_input">
+                <input class="input_comment"type="text" ng-model="post.input">
+                <h4 class="btn_send" ng-click="addComment(post.input, post.$id)"><i class="xi-pen-o"></i></h4>
+            </div>
+            <br>
+            
+            <div>
+
+                <div ng-repeat="(key, comment) in post.comments">
+                    <!--                <div style="float:right" ng-if="comment.comment_author_key == newUIDKey">-->
+                                
+                    <div class="comment">
+                        <img src="/images/character/face0{{comment.character}}.png" height="24px">
+                        <b><span class="name">익명{{comment.comment_author_key.slice(15)}}</span></b>
+                        <span class="timeStamp"> {{comment.timeStamp}}</span>
+                        <i class="xi-close-circle" style="color:#882222" ng-click="removeComment(post.$id, comment, key)"></i>
+                        <p class="comment_msg">{{comment.msg}}</p>    
+                    </div>
+                    
+                    
+    
+                    
+                </div>
+            </div>
+        </div>
+        
+        </div>
+        <br>
+        <br>
+        <div id="footer">
+            
+        </div>
+    </body>
+</html>
