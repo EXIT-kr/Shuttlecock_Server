@@ -118,7 +118,7 @@ app.get('/keyboard', function(req, res){
 })
 
 app.post('/message', function(req, res){
-    var content = req;
+    var content = req.body.content;
     console.log(req);
     
     res.send({
