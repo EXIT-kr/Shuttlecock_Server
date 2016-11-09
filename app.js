@@ -117,6 +117,15 @@ app.get('/keyboard', function(req, res){
     })
 })
 
+app.post('/message', function(req, res){
+    res.send({
+        "message":{
+            "text" : "축하합니다!"
+        }
+    })
+})
+
+
 app.post('/friend', function(req, res){
     res.send({
         "http status code" : 200,
