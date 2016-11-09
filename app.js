@@ -122,7 +122,7 @@ app.post('/message', function(req, res){
     
     res.send({
         "message":{
-            "text" : "축하합니다!" + content;
+            "text" : "축하합니다!" + content
         }
     })
 })
