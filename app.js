@@ -118,9 +118,11 @@ app.get('/keyboard', function(req, res){
 })
 
 app.post('/message', function(req, res){
+    var content = req.content;
+    
     res.send({
         "message":{
-            "text" : "축하합니다!"
+            "text" : "축하합니다!" + content;
         }
     })
 })
