@@ -117,6 +117,24 @@ app.get('/keyboard', function(req, res){
     })
 })
 
+app.post('/friend', function(req, res){
+    res.send({
+        "http status code" : 200,
+        "code" : 0,
+        "message" : "SUCCESS",
+        "comment" : "정상 응답"
+    })
+})
+
+
+app.delete('/friend', function(req, res){
+    res.send({
+        "http status code" : 200,
+        "code" : 0,
+        "message" : "SUCCESS",
+        "comment" : "정상 응답"
+    })
+})
 
 app.get('/test', function(req, res){
     res.render('test');
