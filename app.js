@@ -9,6 +9,8 @@ var cheerio = require('cheerio');
 // XML to js Parser
 var xml2js = require('xml2js').parseString;
 
+var async = require('async');
+
 // Firebase
 var firebase = require('firebase');
 
@@ -119,31 +121,16 @@ function kakaotalkSendMsg(res, msg){
     })
 }
 
-function getAnsanWeather(){
+function kakaotalkSendWeather(res){
     request.get('http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=4127153500', function(err, weather_res, next){
-        if(err) console.log(err);
-        else{
-            var parseOptions = {
-                object: true,
-                reversible: false,
-                coerce: false,
-                sanitize: true,
-                trim: true,
-                arrayNotation: false
-            };
-            
-            
-            xml2js(weather_res.body, function(err, parseResult){
-                
-                console.log(parseResult.rss.channel[0].item[0].description[0]);
-                
-                var parseData = parseResult.rss.channel[0].item[0].description[0].body[0].data;
-                var timeRelease = parseResult.rss.channel[0].item[0].description[0].header[0].tm[0];
-                console.log(timeRelease);
-                return ({time : timeRelease, data : parseData});
-            });   
-        } 
-    }); 
+        xml2js(weather_res.body, function(err, parseResult){
+            console.log(parseResult.rss.channel[0].item[0].description[0]);
+            var parseData = parseResult.rss.channel[0].item[0].description[0].body[0].data;
+            var timeRelease = parseResult.rss.channel[0].item[0].description[0].header[0].tm[0];
+            timeRelease = timeRelease.slice(0,4) + '-' +timeRelease.slice(4,6) + '-' + timeRelease.slice(6,8) + ' ' +timeRelease.slice(8,10) + ':' + timeRelease.slice(10,12);
+            kakaotalkSendMsg(res, "현재 시각 " + timeRelease + " 기준으로\n안산날씨는 " + parseData[0].temp + " °C 이며 날씨 상태는 " + parseData[0].wfKor + "입니다.");
+        });   
+    });
 }
 
 app.get('/keyboard', function(req, res){
@@ -155,13 +142,14 @@ app.get('/keyboard', function(req, res){
 
 app.post('/message', function(req, res){
     var content = req.body.content;
-    console.log(req);
+    console.log(req.body);
+    console.log(content);
+    
     if(content == "시간표"){
         kakaotalkSendMsg(res, "시간표는 아직 미정입니다.");
     }
     else if(content == "날씨"){
-        var weatherData = getAnsanWeather();
-        kakaotalkSendMsg(res, "현재 시각" + weatherData.time + "\n안산날씨는 " + weatherData.data[0].temp + " °C 이며 구름상태는 " + weatherData.data[0].wfKor + "입니다.")
+        kakaotalkSendWeather(res);
     }
     else{
         res.send({
