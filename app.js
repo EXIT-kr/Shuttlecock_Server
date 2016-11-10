@@ -113,11 +113,20 @@ var post_id_list = [];
 
 // Kakaotalk Yellow ID API
 
+//Kakaotalk Normal Message API
 function kakaotalkSendMsg(res, msg){
     res.send({
         "message":{
             "text": msg
         }
+    })
+}
+
+//Kakaotalk Button Message API
+function kakaotalkSendBtn(res, btns){
+    res.send({
+        "type": "buttons",
+        "buttons" : btns
     })
 }
 
@@ -147,6 +156,9 @@ app.post('/message', function(req, res){
     
     if(content == "시간표"){
         kakaotalkSendMsg(res, "시간표는 아직 미정입니다.");
+    }
+    else if(content == "도움말"){
+        kakaotalksendBtn(res, ['시간표', '날씨'])
     }
     else if(content == "날씨"){
         kakaotalkSendWeather(res);
