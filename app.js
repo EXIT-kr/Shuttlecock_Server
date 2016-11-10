@@ -125,9 +125,11 @@ function kakaotalkSendMsg(res, msg){
 //Kakaotalk Button Message API
 function kakaotalkSendBtn(res, btns){
     res.send({
-        "type": "buttons",
-        "buttons" : btns
-    })
+        "keyboard" : {
+            "type": "buttons",
+            "buttons" : btns
+        }
+    });
 }
 
 function kakaotalkSendWeather(res){
@@ -145,7 +147,7 @@ function kakaotalkSendWeather(res){
 app.get('/keyboard', function(req, res){
     res.send({
         "type" : "buttons",
-        "buttons" : ["선택 1", "선택 2", "선택 3"]
+        "buttons" : ["시간표", "날씨"]
     })
 })
 
@@ -158,7 +160,7 @@ app.post('/message', function(req, res){
         kakaotalkSendMsg(res, "시간표는 아직 미정입니다.");
     }
     else if(content == "도움말"){
-        kakaotalkSendBtn(res, ['시간표', '날씨'])
+        kakaotalkSendBtn(res, ["시간표", "날씨"])
     }
     else if(content == "날씨"){
         kakaotalkSendWeather(res);
