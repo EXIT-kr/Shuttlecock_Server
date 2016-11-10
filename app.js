@@ -196,7 +196,7 @@ function kakaotalkSendWeather(res){
             var parseData = parseResult.rss.channel[0].item[0].description[0].body[0].data;
             var timeRelease = parseResult.rss.channel[0].item[0].description[0].header[0].tm[0];
             timeRelease = timeRelease.slice(0,4) + '-' +timeRelease.slice(4,6) + '-' + timeRelease.slice(6,8) + ' ' +timeRelease.slice(8,10) + ':' + timeRelease.slice(10,12);
-            kakaotalkSendMsg(res, "대한민국 기상청 시각\n" + timeRelease + " 기준으로\n 안산 현재 온도는 " + parseData[0].temp + " °C 이며 날씨 상태는 " + parseData[0].wfKor + " 입니다.");
+            kakaotalkSendMsg(res, "대한민국 기상청 시각\n" + timeRelease + " 기준으로\n안산 현재 온도는 " + parseData[0].temp + " °C 이며 날씨 상태는 " + parseData[0].wfKor + " 입니다.");
         });   
     });
 }
@@ -252,7 +252,7 @@ app.post('/message', function(req, res){
     console.log(content);
     
     // Time Table
-    if(content == "시간표"){
+    if(content == "시간표" || content == "셔틀" || content == "버스"){
         kakaotalkSendLabelMsg(res, "현재는 시간표 기능은 아직 구현되지 않았어요...\n빠른 시일내에 구현하도록 하겠습니다.\n\n구현되기 전까지 셔틀콕 웹 버전을 이용하는 것은 어떨까요?", "셔틀콕 웹 버전으로 이동하기", "http://셔틀콕.kr");
     }
     // Help
