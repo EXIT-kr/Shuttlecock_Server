@@ -134,11 +134,7 @@ function kakaotalkSendBtn(res, btns){
           },
           "keyboard": {
             "type": "buttons",
-            "buttons": [
-              "처음으로",
-              "다시 등록하기",
-              "취소하기"
-            ]
+            "buttons": btns
           }
     });
 }
