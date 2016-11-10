@@ -126,10 +126,10 @@ function kakaotalkSendMsg(res, msg){
 function kakaotalkSendBtn(res, btns){
     res.send({
         "message": {
-            "text": "귀하의 차량이 성공적으로 등록되었습니다. 축하합니다!",
+            "text": "무엇을 원하나요? 더욱 많은 기능을 원하신다면 셔틀콕 웹버전을 이용해주세요",
             "message_button": {
-              "label": "주유 쿠폰받기",
-              "url": "https://coupon/url"
+              "label": "셔틀콕 웹버전으로 이동하기",
+              "url": "http://셔틀콕.kr"
             }
           },
           "keyboard": {
