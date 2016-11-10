@@ -286,7 +286,7 @@ app.post('/message', function(req, res){
         kakaotalkSendFood(res, 258);
     }
     else if(content == "야"){
-        var rand = (Math.random() * 5);
+        var rand = Math.floor(Math.random() * 5);
         if(rand == 0) kakaotalkSendMsg(res, "네?");
         else if(rand == 1) kakaotalkSendMsg(res, "부르셨나요?");
         else if(rand == 2) kakaotalkSendMsg(res, "무슨 일이라도..");
@@ -294,7 +294,7 @@ app.post('/message', function(req, res){
         else if(rand == 4) kakaotalkSendMsg(res, "뭐");
     }
     else{
-        kakaotalkSendMsg(res, "아직 제가 모르는 말이에요... 제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
+        kakaotalkSendMsg(res, "아직 제가 모르는 말이에요... \n제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
     }
     
 })
