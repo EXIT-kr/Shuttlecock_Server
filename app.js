@@ -109,6 +109,15 @@ var post_id_list = [];
 //    })
 //});
 
+// Kakaotalk Yellow ID API
+
+function kakaotalkSendMsg(res, msg){
+    res.send({
+        "message":{
+            "text": msg
+        }
+    })
+}
 
 app.get('/keyboard', function(req, res){
     res.send({
@@ -120,12 +129,17 @@ app.get('/keyboard', function(req, res){
 app.post('/message', function(req, res){
     var content = req.body.content;
     console.log(req);
+    if(content == "시간표"){
+        kakaotalkSendMsg(res, "시간표는 아직 미정입니다.");
+    }
+    else{
+        res.send({
+            "message":{
+                "text" : "축하합니다!" + content
+            }
+        })    
+    }
     
-    res.send({
-        "message":{
-            "text" : "축하합니다!" + content
-        }
-    })
 })
 
 
