@@ -126,9 +126,9 @@ function kakaotalkSendMsg(res, msg){
 function kakaotalkSendBtn(res, btns){
     res.send({
         "message": {
-            "text": "무엇을 원하나요? 더욱 많은 기능을 원하신다면 셔틀콕 웹버전을 이용해주세요",
+            "text": "무엇을 원하나요? 더욱 많은 기능을 원하신다면 셔틀콕 웹 버전을 이용해주세요",
             "message_button": {
-              "label": "셔틀콕 웹버전으로 이동하기",
+              "label": "셔틀콕 웹 버전으로 이동하기",
               "url": "http://셔틀콕.kr"
             }
           },
@@ -138,6 +138,20 @@ function kakaotalkSendBtn(res, btns){
           }
     });
 }
+
+
+function kakaotalkSendLabelMsg(res, msg, label_msg, label_url){
+    res.send({
+        "message": {
+            "text": msg,
+            "message_button": {
+              "label": label_msg,
+              "url": label_url
+            }
+        }
+    })
+}
+
 
 function kakaotalkSendWeather(res){
     request.get('http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=4127153500', function(err, weather_res, next){
@@ -164,20 +178,16 @@ app.post('/message', function(req, res){
     console.log(content);
     
     if(content == "시간표"){
-        kakaotalkSendMsg(res, "시간표는 아직 미정입니다.");
+        kakaotalkSendLabelMsg(res, "현재는 시간표 기능은 아직 구현되지 않았어요... 셔틀콕 웹 버전을 이용하는 것은 어떨까요?", "셔틀콕 웹 버전으로 이동하기", "http://셔틀콕.kr");
     }
-    else if(content == "도움말"){
+    else if(content == "도움말" || content == "도움" || content == "사용법"){
         kakaotalkSendBtn(res, ["시간표", "날씨"])
     }
     else if(content == "날씨"){
         kakaotalkSendWeather(res);
     }
     else{
-        res.send({
-            "message":{
-                "text" : "축하합니다!" + content
-            }
-        })    
+        kakaotalkSendMsg(res, "아직 제가 익힌 명령어가 아니에요... 죄송합니다. 제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
     }
     
 })
