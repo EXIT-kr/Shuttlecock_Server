@@ -122,11 +122,11 @@ function kakaotalkSendMsg(res, msg){
     })
 }
 
-//Kakaotalk Button Message API
-function kakaotalkSendBtn(res, btns){
+//Kakaotalk Button Message with Label API
+function kakaotalkSendBtnWithLabel(res, msg, btns){
     res.send({
         "message": {
-            "text": "무엇을 원하나요? 더욱 많은 기능을 원하신다면 셔틀콕 웹 버전을 이용해주세요",
+            "text": msg,
             "message_button": {
               "label": "셔틀콕 웹 버전으로 이동하기",
               "url": "http://셔틀콕.kr"
@@ -139,6 +139,18 @@ function kakaotalkSendBtn(res, btns){
     });
 }
 
+//Kakaotalk Button Message API
+function kakaotalkSendBtn(res, msg, btns){
+    res.send({
+        "message": {
+            "text": msg
+          },
+          "keyboard": {
+            "type": "buttons",
+            "buttons": btns
+          }
+    });
+}
 
 function kakaotalkSendLabelMsg(res, msg, label_msg, label_url){
     res.send({
@@ -154,14 +166,14 @@ function kakaotalkSendLabelMsg(res, msg, label_msg, label_url){
 
 
 
-function kakaotalkSendFood(res){
+function kakaotalkSendFood(res, placeCode){
     
     var d = new Date();
     var month = d.getMonth();
     var date = d.getDate();
     var year = d.getFullYear();
 
-    var place = 255;
+    var place = placeCode;
 
     var url = 'http://www.hanyang.ac.kr/web/www/-'+place+'?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay='+date+'&_foodView_WAR_foodportlet_sFoodDateYear='+year+'&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth='+month;
     
@@ -208,14 +220,14 @@ function kakaotalkSendFood(res){
             }
 
         }
-        var menu_str = "";
+        var menu_str = "배가 고프시군요!! 제가 식단을 알려드릴게요\n";
         menu_str += sendData.day + '\n';
         menu_str += sendData.place + '\n\n';
         for(var i = 0; i < sendData.data[0].menus.length; i++){
             menu_str += sendData.data[0].menus[i].menu.trim()+'\n';
-            menu_str += sendData.data[0].menus[i].price.trim()+'\n';
-            
+            menu_str += sendData.data[0].menus[i].price.trim()+'\n';   
         }
+        menu_str += "\어때요?, 오늘 식단 마음에 드나요?"
         kakaotalkSendMsg(res, menu_str);
         
     })
@@ -252,15 +264,30 @@ app.post('/message', function(req, res){
     }
     // Help
     else if(content == "도움말" || content == "도움" || content == "사용법"){
-        kakaotalkSendBtn(res, ["시간표", "날씨", "식단"])
+        kakaotalkSendBtnWithLabel(res, "무엇을 원하나요? 더욱 많은 기능을 원하신다면 셔틀콕 웹 버전을 이용해주세요", ["시간표", "날씨", "식단"])
     }
     // Weather
     else if(content == "날씨"){
         kakaotalkSendWeather(res);
     }
     // Food
-    else if(content == "식단" || content == "식단표"){
-        kakaotalkSendFood(res);
+    else if(content == "식단" || content == "식단표" || content == "배고파" || content == "밥"){
+        kakaotalkSendBtn(res, "식당을 선택해주세요", ["교직원식당", "학생식당", "창의인재원식당", "푸드코트", "창업보육센터"])
+    }
+    else if(content == "교직원식당"){
+        kakaotalkSendFood(res, 254);
+    }
+    else if(content == "학생식당"){
+        kakaotalkSendFood(res, 255);
+    }
+    else if(content == "창의인재원식당"){
+        kakaotalkSendFood(res, 256);
+    }
+    else if(content == "푸드코트"){
+        kakaotalkSendFood(res, 257);
+    }
+    else if(content == "창업보육센터"){
+        kakaotalkSendFood(res, 258);
     }
     else{
         kakaotalkSendMsg(res, "아직 제가 익힌 명령어가 아니에요... 제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
