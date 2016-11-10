@@ -125,10 +125,21 @@ function kakaotalkSendMsg(res, msg){
 //Kakaotalk Button Message API
 function kakaotalkSendBtn(res, btns){
     res.send({
-        "keyboard" : {
+        "message": {
+            "text": "귀하의 차량이 성공적으로 등록되었습니다. 축하합니다!",
+            "message_button": {
+              "label": "주유 쿠폰받기",
+              "url": "https://coupon/url"
+            }
+          },
+          "keyboard": {
             "type": "buttons",
-            "buttons" : btns
-        }
+            "buttons": [
+              "처음으로",
+              "다시 등록하기",
+              "취소하기"
+            ]
+          }
     });
 }
 
