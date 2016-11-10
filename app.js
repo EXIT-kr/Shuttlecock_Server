@@ -60,56 +60,6 @@ var fb_data;
 var comments_list = [];
 var post_id_list = [];
     
-//FB.api('ericadaesin/feed', function(res){
-//    // error
-//    comments_list = [];
-//    post_id_list = [];
-//    
-//    if(!res || res.error) {
-//        console.log(!res ? 'error occurred' : res.error);
-//        return;
-//    }
-//
-//    fb_data = res;
-//    //make id list
-//    for(var i = 0; i < fb_data.data.length; i++){
-//         post_id_list.push(fb_data.data[i].id);
-//    }
-//
-//    function loop(post_id_list, current, end){
-//        //page response
-//        if(current == end) return;
-//        console.log(post_id_list[current]);
-//
-//        return FB.api(post_id_list[current]+'/comments', function(res){
-//            console.log(res);
-//            comments_list.push(res);
-//            return loop(post_id_list, current+1, end);
-//        })
-//    }
-//
-//    loop(post_id_list, 0, post_id_list.length);
-//
-//})
-
-// Weather API
-//app.get('/weather', function(req, res){
-//    var options = {
-//        url: 'http://apis.skplanetx.com/weather/forecast/3hours?lon=126.8112500000&village=&county=&lat=37.3048100000&city=&version=1',
-//        headers: {
-//            'x-skpop-userId' : 'kbk9288@gmail.com',
-//            'Accept': 'application/json',
-//            'appKey': '7d604ba2-e3d2-3fb5-b516-505ee8db19f2'
-//        }
-//    };
-//    request.get(options, function(err, weather_res, next){
-//        if(err) console.log(err);
-//        else{
-//            console.log(weather_res.body);
-//            res.send(weather_res.body);
-//        }
-//    })
-//});
 
 // Kakaotalk Yellow ID API
 
@@ -246,7 +196,7 @@ function kakaotalkSendWeather(res){
             var parseData = parseResult.rss.channel[0].item[0].description[0].body[0].data;
             var timeRelease = parseResult.rss.channel[0].item[0].description[0].header[0].tm[0];
             timeRelease = timeRelease.slice(0,4) + '-' +timeRelease.slice(4,6) + '-' + timeRelease.slice(6,8) + ' ' +timeRelease.slice(8,10) + ':' + timeRelease.slice(10,12);
-            kakaotalkSendMsg(res, "대한민국 기상청 시각 " + timeRelease + " 기준으로\n안산날씨는 " + parseData[0].temp + " °C 이며 날씨 상태는 " + parseData[0].wfKor + "입니다.");
+            kakaotalkSendMsg(res, "대한민국 기상청 시각\n" + timeRelease + " 기준으로\n 안산 현재 온도는 " + parseData[0].temp + " °C 이며 날씨 상태는 " + parseData[0].wfKor + " 입니다.");
         });   
     });
 }
@@ -263,17 +213,6 @@ function kakaotalkSendPedalro(res){
             var test3 = $('td.style1').eq(69).text().trim();
             var test4 = $('td.style1').eq(70).text().trim();
             
-            console.log($('td.style1').eq(215).text().trim());
-            console.log($('td.style1').eq(216).text().trim());
-            console.log($('td.style1').eq(217).text().trim());
-//            for(var name in test.text()){
-//                console.log(name);
-//            }
-            console.log(test);
-            console.log(test2);
-            console.log(test3);
-            console.log(test4);
-//            console.log(test5);
             
             var data = [{
                             rocation: $('td.style1').eq(68).text().trim(),
@@ -292,7 +231,7 @@ function kakaotalkSendPedalro(res){
                 send_msg += '[' + data[i].rocation + ']\n';
                 send_msg += '현재 ' + data[i].val + ' 대 남았습니다.\n\n'
             }
-//            console.log(data);
+
             send_msg += '가끔은 택시나 버스보단 페달로를 이용해보는 것은 어떨까요?\n건강에 많은 도움이 될거에요!!'
             kakaotalkSendMsg(res, send_msg);
             
@@ -303,7 +242,7 @@ function kakaotalkSendPedalro(res){
 app.get('/keyboard', function(req, res){
     res.send({
         "type" : "buttons",
-        "buttons" : ["시간표", "날씨", "식단"]
+        "buttons" : ["시간표", "날씨", "식단", "페달로"]
     })
 })
 
@@ -314,14 +253,14 @@ app.post('/message', function(req, res){
     
     // Time Table
     if(content == "시간표"){
-        kakaotalkSendLabelMsg(res, "현재는 시간표 기능은 아직 구현되지 않았어요... 셔틀콕 웹 버전을 이용하는 것은 어떨까요?", "셔틀콕 웹 버전으로 이동하기", "http://셔틀콕.kr");
+        kakaotalkSendLabelMsg(res, "현재는 시간표 기능은 아직 구현되지 않았어요...\n 빠른 시일내에 구현하도록 하게습니다.\n 구현되기 전까지 셔틀콕 웹 버전을 이용하는 것은 어떨까요?", "셔틀콕 웹 버전으로 이동하기", "http://셔틀콕.kr");
     }
     // Help
     else if(content == "도움말" || content == "도움" || content == "사용법"){
         kakaotalkSendBtnWithLabel(res, "무엇을 원하나요? 더욱 많은 기능을 원하신다면 셔틀콕 웹 버전을 이용해주세요", ["시간표", "날씨", "식단", "페달로"])
     }
     // Weather
-    else if(content == "날씨" || content == "추워"){
+    else if(content == "날씨" || content == "추워" || content == "오늘 날씨"){
         kakaotalkSendWeather(res);
     }
     else if(content == "페달로"){
@@ -329,7 +268,7 @@ app.post('/message', function(req, res){
     }
     // Food
     else if(content == "식단" || content == "식단표" || content == "배고파" || content == "밥"){
-        kakaotalkSendBtn(res, "식당을 선택해주세요", ["교직원식당", "학생식당", "창의인재원식당", "푸드코트", "창업보육센터"])
+        kakaotalkSendBtn(res, "식당을 선택해주세요.", ["교직원식당", "학생식당", "창의인재원식당", "푸드코트", "창업보육센터"])
     }
     else if(content == "교직원식당"){
         kakaotalkSendFood(res, 254);
@@ -346,8 +285,16 @@ app.post('/message', function(req, res){
     else if(content == "창업보육센터"){
         kakaotalkSendFood(res, 258);
     }
+    else if(content == "야"){
+        var rand = (Math.random() * 5);
+        if(rand == 0) kakaotalkSendMsg(res, "네?");
+        else if(rand == 1) kakaotalkSendMsg(res, "부르셨나요?");
+        else if(rand == 2) kakaotalkSendMsg(res, "무슨 일이라도..");
+        else if(rand == 3) kakaotalkSendMsg(res, "호");
+        else if(rand == 4) kakaotalkSendMsg(res, "뭐");
+    }
     else{
-        kakaotalkSendMsg(res, "아직 제가 익힌 명령어가 아니에요... 제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
+        kakaotalkSendMsg(res, "아직 제가 모르는 말이에요... 제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
     }
     
 })
