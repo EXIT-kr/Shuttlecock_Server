@@ -13,8 +13,12 @@ var async = require('async');
 
 // Firebase
 var firebase = require('firebase');
-
+// Facebook
 var FB = require('fb');
+
+// FileSystem
+var fs = require('fs');
+
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -33,6 +37,17 @@ console.log('Facebook AccessToken Success');
 
 // Firebase Access
 
+
+var firebaseAccount = fs.readFile('public/Shuttlecock-738aa0ee00e2.json');
+firebase.initializeApp({
+  serviceAccount: firebaseAccount,
+  databaseURL: "https://shuttlecock-62d97.firebaseio.com/"
+});
+
+console.log('Firebase Login')
+
+var db = firebase.database();
+var ref = db.ref('/Bot/ChatLogs');
 
 
 
@@ -60,6 +75,34 @@ var fb_data;
 var comments_list = [];
 var post_id_list = [];
     
+
+// Get TimeStamp to String
+function getTimeStamp(){
+    var today = new Date();
+
+    var yyyy = today.getFullYear();
+    var dd = today.getDate();
+    var MM = today.getMonth()+1; //January is 0!
+
+
+    var hh = today.getHours();
+    var mm = today.getMinutes();
+    var ss = today.getSeconds();
+
+    if(dd < 10) dd = '0' + dd;
+    if(MM < 10) MM = '0' + MM;
+
+    if(hh < 10) hh = '0' + hh;
+    if(mm < 10) mm = '0' + mm;
+    if(ss < 10) ss = '0' + ss;
+
+
+    var today = yyyy+'-'+MM+'-'+dd+' ';
+    var curtime = hh+':'+mm+':'+ss;
+
+    return today+curtime;
+}
+
 
 // Kakaotalk Yellow ID API
 
@@ -102,6 +145,7 @@ function kakaotalkSendBtn(res, msg, btns){
     });
 }
 
+//Kakaotalk Label Message API
 function kakaotalkSendLabelMsg(res, msg, label_msg, label_url){
     res.send({
         "message": {
@@ -248,27 +292,58 @@ app.get('/keyboard', function(req, res){
 
 app.post('/message', function(req, res){
     var content = req.body.content;
+    var user_key = req.body.user_key;
+    var type = req.body.type;
+    
+    
     console.log(req.body);
     console.log(content);
     
     // Time Table
     if(content == "시간표" || content == "셔틀" || content == "버스" || content == "셔틀버스" || content == "셔틀 버스"){
+        
+        ref.child('Success/ShuttleBus').push().set({
+           'user_key' : user_key,
+            'text': content
+        });
+        
         kakaotalkSendLabelMsg(res, "현재는 시간표 기능은 아직 구현되지 않았어요...\n빠른 시일내에 구현하도록 하겠습니다.\n\n구현되기 전까지 셔틀콕 웹 버전을 이용하는 것은 어떨까요?", "셔틀콕 웹 버전으로 이동하기", "http://셔틀콕.kr");
+        
+        
     }
     // Help
     else if(content == "도움말" || content == "도움" || content == "사용법"){
+        ref.child('Success/Help').push().set({
+           'user_key' : user_key,
+            'text': content
+        });
         kakaotalkSendBtnWithLabel(res, "무엇을 원하나요? 더욱 많은 기능을 원하신다면 셔틀콕 웹 버전을 이용해주세요", ["시간표", "날씨", "식단", "페달로"])
+        
     }
     // Weather
     else if(content == "날씨" || content == "추워" || content == "오늘 날씨"){
+        ref.child('Success/Weather').push().set({
+           'user_key' : user_key,
+            'text': content
+        });
         kakaotalkSendWeather(res);
     }
     else if(content == "페달로"){
+        ref.child('Success/Pedalro').push().set({
+           'user_key' : user_key,
+            'text': content
+        });
         kakaotalkSendPedalro(res);
+        
     }
     // Food
     else if(content == "식단" || content == "식단표" || content == "배고파" || content == "밥"){
+        ref.child('Success/Food').push().set({
+           'user_key' : user_key,
+            'text': content
+        });
         kakaotalkSendBtn(res, "식당을 선택해주세요.", ["교직원식당", "학생식당", "창의인재원식당", "푸드코트", "창업보육센터"])
+        
     }
     else if(content == "교직원식당"){
         kakaotalkSendFood(res, 254);
@@ -285,16 +360,27 @@ app.post('/message', function(req, res){
     else if(content == "창업보육센터"){
         kakaotalkSendFood(res, 258);
     }
-    else if(content == "야"){
+    else if(content == "야" || content == "야!"){
+        ref.child('Success/Hey').push().set({
+           'user_key' : user_key,
+            'text': content,
+            'timeStamp': getTimeStamp()
+        });
         var rand = Math.floor(Math.random() * 5);
         if(rand == 0) kakaotalkSendMsg(res, "네?");
         else if(rand == 1) kakaotalkSendMsg(res, "부르셨나요?");
         else if(rand == 2) kakaotalkSendMsg(res, "무슨 일이라도..");
         else if(rand == 3) kakaotalkSendMsg(res, "호");
         else if(rand == 4) kakaotalkSendMsg(res, "뭐");
+        
     }
     else{
+        ref.child('Fail').push().set({
+           'user_key' : user_key,
+            'text': content
+        });
         kakaotalkSendMsg(res, "아직 제가 모르는 말이에요... \n제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
+        
     }
     
 })
