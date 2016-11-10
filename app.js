@@ -153,6 +153,75 @@ function kakaotalkSendLabelMsg(res, msg, label_msg, label_url){
 }
 
 
+
+function kakaotalkSendFood(res){
+    
+    var d = new Date();
+    var month = d.getMonth();
+    var date = d.getDate();
+    var year = d.getFullYear();
+
+    var place = 255;
+
+    var url = 'http://www.hanyang.ac.kr/web/www/-'+place+'?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay='+date+'&_foodView_WAR_foodportlet_sFoodDateYear='+year+'&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth='+month;
+    
+    
+    var sendData = {};
+    request.get(url, function(err, parse_res, next){
+        if(err) console.log(err);
+        else{
+
+            var $ = cheerio.load(parse_res.body);
+            var place = $('.sub-head').children('h3').text();
+            var list = $('.d-title2');
+            var type = $('.thumbnails');
+            var day = $('.day-selc');
+            day = day.text().replace(/\t/gi,'').replace(/\r/gi,'').split('\n');
+            day = day[2]+' '+day[3];
+            console.log(day);
+            console.log(place);
+            
+            sendData.place = place;
+            sendData.day = day;
+            sendData.data = [];
+
+            for(var i = 0; i < type.length; i++){
+                var title = $(list[i]).text();
+
+                sendData.data.push({});
+                var currentData = sendData.data[i];
+                currentData.type = title;
+                currentData.menus = [];
+
+                var element = $(type[i]).children('.span3').children('.thumbnail');;
+                for(var j = 0; j < element.length; j++){
+
+                    var set = {};
+                    var temp = $(element[j])
+                    var menu = temp.children('h3').text();
+                    var price = temp.children('.price').text();
+                    set.menu = menu;
+                    set.price = price;
+//                    console.log(set);
+                    currentData.menus.push(set);
+                }  
+            }
+
+        }
+        var menu_str = "";
+        menu_str += sendData.day + '\n';
+        menu_str += sendData.place + '\n\n';
+        for(var i = 0; i < sendData.data[0].menus.length; i++){
+            menu_str += sendData.data[0].menus[i].menu.trim()+'\n';
+            menu_str += sendData.data[0].menus[i].price.trim()+'\n';
+            
+        }
+        kakaotalkSendMsg(res, menu_str);
+        
+    })
+}
+
+// Kakaotalk Send Ansan city Weather information
 function kakaotalkSendWeather(res){
     request.get('http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=4127153500', function(err, weather_res, next){
         xml2js(weather_res.body, function(err, parseResult){
@@ -160,7 +229,7 @@ function kakaotalkSendWeather(res){
             var parseData = parseResult.rss.channel[0].item[0].description[0].body[0].data;
             var timeRelease = parseResult.rss.channel[0].item[0].description[0].header[0].tm[0];
             timeRelease = timeRelease.slice(0,4) + '-' +timeRelease.slice(4,6) + '-' + timeRelease.slice(6,8) + ' ' +timeRelease.slice(8,10) + ':' + timeRelease.slice(10,12);
-            kakaotalkSendMsg(res, "현재 시각 " + timeRelease + " 기준으로\n안산날씨는 " + parseData[0].temp + " °C 이며 날씨 상태는 " + parseData[0].wfKor + "입니다.");
+            kakaotalkSendMsg(res, "대한민국 기상청 시각 " + timeRelease + " 기준으로\n안산날씨는 " + parseData[0].temp + " °C 이며 날씨 상태는 " + parseData[0].wfKor + "입니다.");
         });   
     });
 }
@@ -168,7 +237,7 @@ function kakaotalkSendWeather(res){
 app.get('/keyboard', function(req, res){
     res.send({
         "type" : "buttons",
-        "buttons" : ["시간표", "날씨"]
+        "buttons" : ["시간표", "날씨", "식단"]
     })
 })
 
@@ -177,17 +246,24 @@ app.post('/message', function(req, res){
     console.log(req.body);
     console.log(content);
     
+    // Time Table
     if(content == "시간표"){
         kakaotalkSendLabelMsg(res, "현재는 시간표 기능은 아직 구현되지 않았어요... 셔틀콕 웹 버전을 이용하는 것은 어떨까요?", "셔틀콕 웹 버전으로 이동하기", "http://셔틀콕.kr");
     }
+    // Help
     else if(content == "도움말" || content == "도움" || content == "사용법"){
-        kakaotalkSendBtn(res, ["시간표", "날씨"])
+        kakaotalkSendBtn(res, ["시간표", "날씨", "식단"])
     }
+    // Weather
     else if(content == "날씨"){
         kakaotalkSendWeather(res);
     }
+    // Food
+    else if(content == "식단" || content == "식단표"){
+        kakaotalkSendFood(res);
+    }
     else{
-        kakaotalkSendMsg(res, "아직 제가 익힌 명령어가 아니에요... 죄송합니다. 제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
+        kakaotalkSendMsg(res, "아직 제가 익힌 명령어가 아니에요... 제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
     }
     
 })
