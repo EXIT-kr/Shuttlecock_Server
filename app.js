@@ -253,7 +253,7 @@ app.post('/message', function(req, res){
     
     // Time Table
     if(content == "시간표"){
-        kakaotalkSendLabelMsg(res, "현재는 시간표 기능은 아직 구현되지 않았어요...\n 빠른 시일내에 구현하도록 하게습니다.\n 구현되기 전까지 셔틀콕 웹 버전을 이용하는 것은 어떨까요?", "셔틀콕 웹 버전으로 이동하기", "http://셔틀콕.kr");
+        kakaotalkSendLabelMsg(res, "현재는 시간표 기능은 아직 구현되지 않았어요...\n빠른 시일내에 구현하도록 하겠습니다.\n\n구현되기 전까지 셔틀콕 웹 버전을 이용하는 것은 어떨까요?", "셔틀콕 웹 버전으로 이동하기", "http://셔틀콕.kr");
     }
     // Help
     else if(content == "도움말" || content == "도움" || content == "사용법"){
