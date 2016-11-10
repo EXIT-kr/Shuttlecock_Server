@@ -165,7 +165,7 @@ function kakaotalkSendLabelMsg(res, msg, label_msg, label_url){
 }
 
 
-
+// Kakaotalk Send Food information
 function kakaotalkSendFood(res, placeCode){
     
     var d = new Date();
@@ -221,19 +221,19 @@ function kakaotalkSendFood(res, placeCode){
 
         }
         console.log(sendData);
-        var menu_str = "배가 고프시군요!!\n제가 식단을 알려드릴게요\n\n";
-        menu_str += sendData.day + '\n';
-        menu_str += sendData.place + '\n\n';
+        var send_msg = "배가 고프시군요!!\n제가 식단을 알려드릴게요\n\n";
+        send_msg += sendData.day + '\n';
+        send_msg += sendData.place + '\n';
         for(var i = 0; i < sendData.data.length; i++){
-            menu_str += '[' + sendData.data[i].type + ']\n';
+            send_msg += '\n[' + sendData.data[i].type + ']\n';
             for(var j = 0; j < sendData.data[i].menus.length; j++){
-                menu_str += sendData.data[i].menus[j].menu.trim()+'\n';
-                menu_str += sendData.data[i].menus[j].price.trim()+'\n';   
+                send_msg += sendData.data[i].menus[j].menu.trim()+'\n';
+                send_msg += sendData.data[i].menus[j].price.trim()+'\n\n';   
             }    
         }
         
-        menu_str += "\n\n어때요, 오늘 식단 마음에 드나요?"
-        kakaotalkSendMsg(res, menu_str);
+        send_msg += "어때요, 오늘 식단 마음에 드나요?"
+        kakaotalkSendMsg(res, send_msg);
         
     })
 }
@@ -249,6 +249,55 @@ function kakaotalkSendWeather(res){
             kakaotalkSendMsg(res, "대한민국 기상청 시각 " + timeRelease + " 기준으로\n안산날씨는 " + parseData[0].temp + " °C 이며 날씨 상태는 " + parseData[0].wfKor + "입니다.");
         });   
     });
+}
+
+// Kakaotalk Send Ansan public bicycle information 
+function kakaotalkSendPedalro(res){
+    var url = 'http://www.pedalro.kr/station/station.do?method=stationState&menuIdx=st_01';
+    request.get(url, function(err, pedalro_res, next){
+        if(err) console.log(err);
+        else{
+            var $ = cheerio.load(pedalro_res.body);
+            var test = $('td.style1 > a').eq(20).text();
+            var test2 = $('td.style1').eq(68).text().trim();
+            var test3 = $('td.style1').eq(69).text().trim();
+            var test4 = $('td.style1').eq(70).text().trim();
+            
+            console.log($('td.style1').eq(215).text().trim());
+            console.log($('td.style1').eq(216).text().trim());
+            console.log($('td.style1').eq(217).text().trim());
+//            for(var name in test.text()){
+//                console.log(name);
+//            }
+            console.log(test);
+            console.log(test2);
+            console.log(test3);
+            console.log(test4);
+//            console.log(test5);
+            
+            var data = [{
+                            rocation: $('td.style1').eq(68).text().trim(),
+                            max_val: $('td.style1').eq(69).text().trim(),
+                            val: $('td.style1').eq(70).text().trim()
+                        },
+                        {
+                            rocation: $('td.style1').eq(215).text().trim(),
+                            max_val: $('td.style1').eq(216).text().trim(),
+                            val: $('td.style1').eq(217).text().trim()
+                        }
+                       ]
+            
+            var send_msg = "안산시 페달로 정거장 현황을 실시간으로 알려드릴게요!!\n\n";
+            for(var i = 0; i < data.length; i++){
+                send_msg += '[' + data[i].rocation + ']\n';
+                send_msg += '현재 ' + data[i].val + ' 대 남았습니다.\n\n'
+            }
+//            console.log(data);
+            send_msg += '가끔은 택시나 버스보단 페달로를 이용해보는 것은 어떨까요?\n건강에 많은 도움이 될거에요!!'
+            kakaotalkSendMsg(res, send_msg);
+            
+        }
+    })
 }
 
 app.get('/keyboard', function(req, res){
@@ -269,11 +318,14 @@ app.post('/message', function(req, res){
     }
     // Help
     else if(content == "도움말" || content == "도움" || content == "사용법"){
-        kakaotalkSendBtnWithLabel(res, "무엇을 원하나요? 더욱 많은 기능을 원하신다면 셔틀콕 웹 버전을 이용해주세요", ["시간표", "날씨", "식단"])
+        kakaotalkSendBtnWithLabel(res, "무엇을 원하나요? 더욱 많은 기능을 원하신다면 셔틀콕 웹 버전을 이용해주세요", ["시간표", "날씨", "식단", "페달로"])
     }
     // Weather
-    else if(content == "날씨"){
+    else if(content == "날씨" || content == "추워"){
         kakaotalkSendWeather(res);
+    }
+    else if(content == "페달로"){
+        kakaotalkSendPedalro(res);
     }
     // Food
     else if(content == "식단" || content == "식단표" || content == "배고파" || content == "밥"){
