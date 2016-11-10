@@ -220,14 +220,19 @@ function kakaotalkSendFood(res, placeCode){
             }
 
         }
-        var menu_str = "배가 고프시군요!! 제가 식단을 알려드릴게요\n";
+        console.log(sendData);
+        var menu_str = "배가 고프시군요!!\n제가 식단을 알려드릴게요\n\n";
         menu_str += sendData.day + '\n';
         menu_str += sendData.place + '\n\n';
-        for(var i = 0; i < sendData.data[0].menus.length; i++){
-            menu_str += sendData.data[0].menus[i].menu.trim()+'\n';
-            menu_str += sendData.data[0].menus[i].price.trim()+'\n';   
+        for(var i = 0; i < sendData.data.length; i++){
+            menu_str += '[' + sendData.data[i].type + ']\n';
+            for(var j = 0; j < sendData.data[i].menus.length; j++){
+                menu_str += sendData.data[i].menus[j].menu.trim()+'\n';
+                menu_str += sendData.data[i].menus[j].price.trim()+'\n';   
+            }    
         }
-        menu_str += "\어때요?, 오늘 식단 마음에 드나요?"
+        
+        menu_str += "\n\n어때요, 오늘 식단 마음에 드나요?"
         kakaotalkSendMsg(res, menu_str);
         
     })
