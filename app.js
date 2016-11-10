@@ -158,7 +158,7 @@ app.post('/message', function(req, res){
         kakaotalkSendMsg(res, "시간표는 아직 미정입니다.");
     }
     else if(content == "도움말"){
-        kakaotalksendBtn(res, ['시간표', '날씨'])
+        kakaotalkSendBtn(res, ['시간표', '날씨'])
     }
     else if(content == "날씨"){
         kakaotalkSendWeather(res);
