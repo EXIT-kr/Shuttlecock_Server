@@ -228,7 +228,7 @@ function kakaotalkAnalyzePhoto(res, img_url){
         var msg = analyzation_res.body.description.captions[0].text;
         console.log(analyzation_res.body);
         console.log(analyzation_res.body.description.captions[0].text);
-        kakaotalkSendMsg(res, msg);
+        translateSend(res, msg);
     })
 }
 
