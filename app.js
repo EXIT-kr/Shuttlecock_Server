@@ -176,6 +176,42 @@ function kakaotalkSendLabelMsg(res, msg, label_msg, label_url){
 
 // Microsoft Congitive API
 
+// Microsoft Translate API
+var translateKey = '131784c1d38c4a0ca28dc5e59c42d088';
+
+function translateSend(res, msg){
+    
+    var post_option = {
+        url: 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken?Subscription-Key='+translateKey, 
+        body : ""
+    }
+    
+    request.post(post_option, function(err, Auth_res, next){
+        var AuthKey = Auth_res.body
+        var url = 'https://api.microsofttranslator.com/v2/http.svc/Translate?appid=Bearer '+AuthKey+"&text="+msg+"&from=en&to=ko"
+        
+        var get_option = {
+            url: url,
+            headers:{'Accept': 'application/xml'}
+        }
+        
+        request.get(get_option, function(err, translate_res, next){
+//            console.log(translate_res.body);
+            xml2js(translate_res.body, function(err, parse_res){
+                console.log(parse_res.string._);
+                var transText = parse_res.string._;
+                kakaotalkSendMsg(res, transText);
+            })
+        })
+    })
+}
+
+//translateSend('hello world')
+
+//https://api.cognitive.microsoft.com/sts/v1.0/issueToken?Subscription-Key=
+
+
+// Kakaotalk Analyze Photo API with Microsoft Cognitive Computer Vision API
 function kakaotalkAnalyzePhoto(res, img_url){
     request.post({
         method: "POST",
