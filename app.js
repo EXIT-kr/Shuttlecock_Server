@@ -202,8 +202,15 @@ function translateSend(res, info){
             xml2js(translate_res.body, function(err, parse_res){
                 console.log(parse_res.string._);
                 var transText = parse_res.string._;
-                
-                var send_msg = "흠.. 정확하진 않지만 "+ parseFloat(confidence).toFixed(2)*100 +"% 의 확률로 이 사진은\n"
+                var send_msg = "";
+                confidence = parseFloat(confidence).toFixed(2)*100;
+                if(confidence < 50){
+                    send_msg += "흠... 정확하진 않지만 "
+                }
+                else{
+                    send_msg += "이번에는 맞출 수 있을 것같아요! "
+                }
+                send_msg += confidence +"% 의 확률로 이 사진은\n"
                 send_msg += transText +'\n사진 같아요 제가 맞나요?'
                 
                 kakaotalkSendMsg(res, send_msg);
@@ -239,6 +246,8 @@ function kakaotalkAnalyzePhoto(res, img_url){
             confidence: confidence,
             faces: faces
         }
+        
+        // Detect Selfie Photo
         if(faces.length == 1){
             var age = parseInt(faces[0].age)-1;
             var gender = faces[0].gender;
