@@ -392,6 +392,12 @@ app.post('/message', function(req, res){
         else if(rand == 4) kakaotalkSendMsg(res, "뭐");
         
     }
+    else if(content == "싫어"){
+        kakaotalkSendMsg(res, "제가 싫으신가요?ㅠ");
+    }
+    else if(content == "셔틀콕"){
+        kakaotalkSendMsg(res, "넵!! 제가 바로 그 셔틀콕입니다.");
+    }
     else{
         ref.child('Fail').push().set({
            'user_key' : user_key,
