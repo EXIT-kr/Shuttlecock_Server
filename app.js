@@ -3,20 +3,25 @@ var express = require('express');
 var request = require('request');
 // HTML Node js parser
 var cheerio = require('cheerio');
+
 // XML to Json Parser
+// You can't use xml2json module on Azure Web Service
 //var xmlParser = require('xml2json');
 
 // XML to js Parser
 var xml2js = require('xml2js').parseString;
 
+
 var async = require('async');
 
 // Firebase
 var firebase = require('firebase');
+
 // Facebook
 var FB = require('fb');
 
 // FileSystem
+// You can't use FileSystem module on Azure Web Service
 //var fs = require('fs');
 
 var path = require('path');
@@ -36,9 +41,6 @@ FB.setAccessToken('607442856100225|1PKH0ji8fyGRDC96ZGWkuQw8YHk');
 console.log('Facebook AccessToken Success');
 
 // Firebase Access
-
-
-//var firebaseAccount = fs.readFile('public/Shuttlecock-738aa0ee00e2.json');
 firebase.initializeApp({
   serviceAccount: {
       "type": "service_account",
@@ -55,7 +57,7 @@ firebase.initializeApp({
   databaseURL: "https://shuttlecock-62d97.firebaseio.com/"
 });
 
-console.log('Firebase Login')
+console.log('Firebase Login Success')
 
 var db = firebase.database();
 var ref = db.ref('/Bot/ChatLogs');
@@ -219,7 +221,7 @@ function kakaotalkSendFood(res, placeCode){
                     var price = temp.children('.price').text();
                     set.menu = menu;
                     set.price = price;
-//                    console.log(set);
+
                     currentData.menus.push(set);
                 }  
             }
@@ -315,7 +317,8 @@ app.post('/message', function(req, res){
         
         ref.child('Success/ShuttleBus').push().set({
            'user_key' : user_key,
-            'text': content
+            'text': content,
+            'timeStamp': getTimeStamp()
         });
         
         kakaotalkSendLabelMsg(res, "현재는 시간표 기능은 아직 구현되지 않았어요...\n빠른 시일내에 구현하도록 하겠습니다.\n\n구현되기 전까지 셔틀콕 웹 버전을 이용하는 것은 어떨까요?", "셔틀콕 웹 버전으로 이동하기", "http://셔틀콕.kr");
@@ -326,7 +329,8 @@ app.post('/message', function(req, res){
     else if(content == "도움말" || content == "도움" || content == "사용법"){
         ref.child('Success/Help').push().set({
            'user_key' : user_key,
-            'text': content
+            'text': content,
+            'timeStamp': getTimeStamp()
         });
         kakaotalkSendBtnWithLabel(res, "무엇을 원하나요? 더욱 많은 기능을 원하신다면 셔틀콕 웹 버전을 이용해주세요", ["시간표", "날씨", "식단", "페달로"])
         
@@ -335,14 +339,16 @@ app.post('/message', function(req, res){
     else if(content == "날씨" || content == "추워" || content == "오늘 날씨"){
         ref.child('Success/Weather').push().set({
            'user_key' : user_key,
-            'text': content
+            'text': content,
+            'timeStamp': getTimeStamp()
         });
         kakaotalkSendWeather(res);
     }
     else if(content == "페달로"){
         ref.child('Success/Pedalro').push().set({
            'user_key' : user_key,
-            'text': content
+            'text': content,
+            'timeStamp': getTimeStamp()
         });
         kakaotalkSendPedalro(res);
         
@@ -351,7 +357,8 @@ app.post('/message', function(req, res){
     else if(content == "식단" || content == "식단표" || content == "배고파" || content == "밥"){
         ref.child('Success/Food').push().set({
            'user_key' : user_key,
-            'text': content
+            'text': content,
+            'timeStamp': getTimeStamp()
         });
         kakaotalkSendBtn(res, "식당을 선택해주세요.", ["교직원식당", "학생식당", "창의인재원식당", "푸드코트", "창업보육센터"])
         
@@ -388,7 +395,9 @@ app.post('/message', function(req, res){
     else{
         ref.child('Fail').push().set({
            'user_key' : user_key,
-            'text': content
+            'text': content,
+            'timeStamp': getTimeStamp()
+            
         });
         kakaotalkSendMsg(res, "아직 제가 모르는 말이에요... \n제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
         
