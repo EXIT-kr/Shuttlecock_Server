@@ -172,6 +172,32 @@ function kakaotalkSendLabelMsg(res, msg, label_msg, label_url){
 }
 
 
+
+
+// Microsoft Congitive API
+
+function kakaotalkAnalyzePhoto(res, img_url){
+    request.post({
+        method: "POST",
+        url: 'https://api.projectoxford.ai/vision/v1.0/analyze?visualFeatures=Description&language=en',
+        headers: {
+            'Content-Type': 'application/json',
+            'Ocp-Apim-Subscription-Key' : 'c8a88151c9c84934aef42a17c161eb5f'
+        },
+        json: true,
+        body:{
+            "url" : img_url
+        }
+    }, function(err, analyzation_res, next){
+        var msg = analyzation_res.body.description.captions[0].text;
+        console.log(analyzation_res.body);
+        console.log(analyzation_res.body.description.captions[0].text);
+        kakaotalkSendMsg(res, msg);
+    })
+}
+
+
+
 // Kakaotalk Send Food information
 function kakaotalkSendFood(res, placeCode){
     
@@ -312,102 +338,112 @@ app.post('/message', function(req, res){
     console.log(req.body);
     console.log(content);
     
-    // Time Table
-    if(content == "시간표" || content == "셔틀" || content == "버스" || content == "셔틀버스" || content == "셔틀 버스"){
+    
+    if(type == "photo"){
+        kakaotalkAnalyzePhoto(res, content);
+    }
+    else if(type == "text"){
+        // Time Table
+        if(content == "시간표" || content == "셔틀" || content == "버스" || content == "셔틀버스" || content == "셔틀 버스"){
+
+            ref.child('Success/ShuttleBus').push().set({
+               'user_key' : user_key,
+                'text': content,
+                'timeStamp': getTimeStamp()
+            });
+
+            kakaotalkSendLabelMsg(res, "현재는 시간표 기능은 아직 구현되지 않았어요...\n빠른 시일내에 구현하도록 하겠습니다.\n\n구현되기 전까지 셔틀콕 웹 버전을 이용하는 것은 어떨까요?", "셔틀콕 웹 버전으로 이동하기", "http://셔틀콕.kr");
+
+
+        }
+        // Help
+        else if(content == "도움말" || content == "도움" || content == "사용법"){
+            ref.child('Success/Help').push().set({
+               'user_key' : user_key,
+                'text': content,
+                'timeStamp': getTimeStamp()
+            });
+            kakaotalkSendBtnWithLabel(res, "무엇을 원하나요? 더욱 많은 기능을 원하신다면 셔틀콕 웹 버전을 이용해주세요", ["시간표", "날씨", "식단", "페달로"])
+
+        }
+        // Weather
+        else if(content == "날씨" || content == "추워" || content == "오늘 날씨"){
+            ref.child('Success/Weather').push().set({
+               'user_key' : user_key,
+                'text': content,
+                'timeStamp': getTimeStamp()
+            });
+            kakaotalkSendWeather(res);
+        }
+        else if(content == "페달로"){
+            ref.child('Success/Pedalro').push().set({
+               'user_key' : user_key,
+                'text': content,
+                'timeStamp': getTimeStamp()
+            });
+            kakaotalkSendPedalro(res);
+
+        }
+        // Food
+        else if(content == "식단" || content == "식단표" || content == "배고파" || content == "밥"){
+            ref.child('Success/Food').push().set({
+               'user_key' : user_key,
+                'text': content,
+                'timeStamp': getTimeStamp()
+            });
+            kakaotalkSendBtn(res, "식당을 선택해주세요.", ["교직원식당", "학생식당", "창의인재원식당", "푸드코트", "창업보육센터"])
+
+        }
+        else if(content == "교직원식당"){
+            kakaotalkSendFood(res, 254);
+        }
+        else if(content == "학생식당"){
+            kakaotalkSendFood(res, 255);
+        }
+        else if(content == "창의인재원식당"){
+            kakaotalkSendFood(res, 256);
+        }
+        else if(content == "푸드코트"){
+            kakaotalkSendFood(res, 257);
+        }
+        else if(content == "창업보육센터"){
+            kakaotalkSendFood(res, 258);
+        }
+        else if(content == "야" || content == "야!"){
+            ref.child('Success/Hey').push().set({
+               'user_key' : user_key,
+                'text': content,
+                'timeStamp': getTimeStamp()
+            });
+            var rand = Math.floor(Math.random() * 5);
+            if(rand == 0) kakaotalkSendMsg(res, "네?");
+            else if(rand == 1) kakaotalkSendMsg(res, "부르셨나요?");
+            else if(rand == 2) kakaotalkSendMsg(res, "무슨 일이라도..");
+            else if(rand == 3) kakaotalkSendMsg(res, "호");
+            else if(rand == 4) kakaotalkSendMsg(res, "뭐");
+
+        }
+        else if(content == "싫어"){
+            kakaotalkSendMsg(res, "제가 싫으신가요?ㅠ");
+        }
+        else if(content == "셔틀콕"){
+            kakaotalkSendMsg(res, "넵!! 제가 바로 그 셔틀콕입니다.");
+        }
+        else{
+            ref.child('Fail').push().set({
+               'user_key' : user_key,
+                'text': content,
+                'timeStamp': getTimeStamp()
+
+            });
+            kakaotalkSendMsg(res, "아직 제가 모르는 말이에요... \n제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
+
+        }
         
-        ref.child('Success/ShuttleBus').push().set({
-           'user_key' : user_key,
-            'text': content,
-            'timeStamp': getTimeStamp()
-        });
-        
-        kakaotalkSendLabelMsg(res, "현재는 시간표 기능은 아직 구현되지 않았어요...\n빠른 시일내에 구현하도록 하겠습니다.\n\n구현되기 전까지 셔틀콕 웹 버전을 이용하는 것은 어떨까요?", "셔틀콕 웹 버전으로 이동하기", "http://셔틀콕.kr");
-        
-        
     }
-    // Help
-    else if(content == "도움말" || content == "도움" || content == "사용법"){
-        ref.child('Success/Help').push().set({
-           'user_key' : user_key,
-            'text': content,
-            'timeStamp': getTimeStamp()
-        });
-        kakaotalkSendBtnWithLabel(res, "무엇을 원하나요? 더욱 많은 기능을 원하신다면 셔틀콕 웹 버전을 이용해주세요", ["시간표", "날씨", "식단", "페달로"])
-        
-    }
-    // Weather
-    else if(content == "날씨" || content == "추워" || content == "오늘 날씨"){
-        ref.child('Success/Weather').push().set({
-           'user_key' : user_key,
-            'text': content,
-            'timeStamp': getTimeStamp()
-        });
-        kakaotalkSendWeather(res);
-    }
-    else if(content == "페달로"){
-        ref.child('Success/Pedalro').push().set({
-           'user_key' : user_key,
-            'text': content,
-            'timeStamp': getTimeStamp()
-        });
-        kakaotalkSendPedalro(res);
-        
-    }
-    // Food
-    else if(content == "식단" || content == "식단표" || content == "배고파" || content == "밥"){
-        ref.child('Success/Food').push().set({
-           'user_key' : user_key,
-            'text': content,
-            'timeStamp': getTimeStamp()
-        });
-        kakaotalkSendBtn(res, "식당을 선택해주세요.", ["교직원식당", "학생식당", "창의인재원식당", "푸드코트", "창업보육센터"])
-        
-    }
-    else if(content == "교직원식당"){
-        kakaotalkSendFood(res, 254);
-    }
-    else if(content == "학생식당"){
-        kakaotalkSendFood(res, 255);
-    }
-    else if(content == "창의인재원식당"){
-        kakaotalkSendFood(res, 256);
-    }
-    else if(content == "푸드코트"){
-        kakaotalkSendFood(res, 257);
-    }
-    else if(content == "창업보육센터"){
-        kakaotalkSendFood(res, 258);
-    }
-    else if(content == "야" || content == "야!"){
-        ref.child('Success/Hey').push().set({
-           'user_key' : user_key,
-            'text': content,
-            'timeStamp': getTimeStamp()
-        });
-        var rand = Math.floor(Math.random() * 5);
-        if(rand == 0) kakaotalkSendMsg(res, "네?");
-        else if(rand == 1) kakaotalkSendMsg(res, "부르셨나요?");
-        else if(rand == 2) kakaotalkSendMsg(res, "무슨 일이라도..");
-        else if(rand == 3) kakaotalkSendMsg(res, "호");
-        else if(rand == 4) kakaotalkSendMsg(res, "뭐");
-        
-    }
-    else if(content == "싫어"){
-        kakaotalkSendMsg(res, "제가 싫으신가요?ㅠ");
-    }
-    else if(content == "셔틀콕"){
-        kakaotalkSendMsg(res, "넵!! 제가 바로 그 셔틀콕입니다.");
-    }
-    else{
-        ref.child('Fail').push().set({
-           'user_key' : user_key,
-            'text': content,
-            'timeStamp': getTimeStamp()
-            
-        });
-        kakaotalkSendMsg(res, "아직 제가 모르는 말이에요... \n제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
-        
-    }
+    
+    
+    
     
 })
 
@@ -434,6 +470,9 @@ app.delete('/friend', function(req, res){
 app.get('/test', function(req, res){
     res.render('test');
 })
+
+
+
 
 
 // Weather API
