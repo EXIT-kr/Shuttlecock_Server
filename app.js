@@ -176,10 +176,9 @@ function kakaotalkSendLabelMsg(res, msg, label_msg, label_url){
 
 // Microsoft Congitive API
 
-// Microsoft Translate API
-var translateKey = '131784c1d38c4a0ca28dc5e59c42d088';
-
-function translateSend(res, msg){
+// Kakaotalk Send Translated Message by Microsoft Translate API
+function translateSend(res, info){
+    var translateKey = '131784c1d38c4a0ca28dc5e59c42d088';
     
     var post_option = {
         url: 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken?Subscription-Key='+translateKey, 
@@ -187,6 +186,9 @@ function translateSend(res, msg){
     }
     
     request.post(post_option, function(err, Auth_res, next){
+        var msg = info.text;
+        var confidence = info.confidence;
+        
         var AuthKey = Auth_res.body
         var url = 'https://api.microsofttranslator.com/v2/http.svc/Translate?appid=Bearer '+AuthKey+"&text="+msg+"&from=en&to=ko"
         
@@ -200,22 +202,23 @@ function translateSend(res, msg){
             xml2js(translate_res.body, function(err, parse_res){
                 console.log(parse_res.string._);
                 var transText = parse_res.string._;
-                kakaotalkSendMsg(res, transText);
+                
+                var send_msg = "흠.. 정확하진 않지만 "+ parseFloat(confidence).toFixed(2)*100 +"% 의 확률로 이 사진은\n"
+                send_msg += transText +'\n사진 같아요 제가 맞나요?'
+                
+                kakaotalkSendMsg(res, send_msg);
             })
         })
     })
 }
 
-//translateSend('hello world')
-
-//https://api.cognitive.microsoft.com/sts/v1.0/issueToken?Subscription-Key=
 
 
 // Kakaotalk Analyze Photo API with Microsoft Cognitive Computer Vision API
 function kakaotalkAnalyzePhoto(res, img_url){
     request.post({
         method: "POST",
-        url: 'https://api.projectoxford.ai/vision/v1.0/analyze?visualFeatures=Description&language=en',
+        url: 'https://api.projectoxford.ai/vision/v1.0/analyze?visualFeatures=Description,Faces&language=en',
         headers: {
             'Content-Type': 'application/json',
             'Ocp-Apim-Subscription-Key' : 'c8a88151c9c84934aef42a17c161eb5f'
@@ -225,10 +228,43 @@ function kakaotalkAnalyzePhoto(res, img_url){
             "url" : img_url
         }
     }, function(err, analyzation_res, next){
+        console.log(analyzation_res);
+        var faces = analyzation_res.body.faces;
+        console.log(faces);
         var msg = analyzation_res.body.description.captions[0].text;
-//        console.log(analyzation_res.body);
-//        console.log(analyzation_res.body.description.captions[0].text);
-        translateSend(res, msg);
+        var confidence = analyzation_res.body.description.captions[0].confidence;
+        
+        var info ={
+            text: msg,
+            confidence: confidence,
+            faces: faces
+        }
+        if(faces.length == 1){
+            var age = parseInt(faces[0].age)-1;
+            var gender = faces[0].gender;
+            
+            var send_msg = "" 
+            var rand = Math.floor(Math.random() * 5);
+            if(rand == 0) send_msg += "오 매우 잘나온 셀카 사진이네요"
+            else if(rand == 1) send_msg += "저에게 지금 셀카를 보내는 거에요? 어디 한번 볼까요?"
+            else if(rand == 2) send_msg += "와 진짜 잘나왔어요, 본인 맞아요?"
+            else if(rand == 3) send_msg += "저보고 나이 맞춰보라고요? 저 잘할 자신있어요"
+            else if(rand == 4) send_msg += "제가 관상은 못 봐도 나이는 좀 볼 줄 알아요"
+            
+            
+            send_msg += "\n음.. 제가 보기에는\n한 " + age + "살 같아보여요"
+            if(rand % 5 == 1){
+                if(gender == "Male") send_msg += "\n상당한 미남이시네요!"
+                else send_msg += "\n상당한 미인이시네요! 누구라도 보면 반할 것같아요"    
+            }
+            send_msg += "\n또 다른 사진은 없나요?";
+            
+            kakaotalkSendMsg(res, send_msg);
+            
+            
+        }
+        else translateSend(res, info);
+        
     })
 }
 
