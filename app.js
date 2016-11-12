@@ -546,7 +546,7 @@ app.post('/message', function(req, res){
     else if(type == "text"){
 //        console.log(content.includes("셔틀"));
         // Time Table
-        if(content.includes("셔틀") || content.includes("버스")){
+        if(content.includes("셔틀") || content.includes("버스") || content.includes("시간표")){
 
             ref.child('Success/ShuttleBus').push().set({
                'user_key' : user_key,
