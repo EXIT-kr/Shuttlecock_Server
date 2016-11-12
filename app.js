@@ -176,15 +176,134 @@ function kakaotalkSendLabelMsg(res, msg, label_msg, label_url){
 
 // Microsoft Congitive API
 
-// Kakaotalk Send Translated Message by Microsoft Translate API
-function translateSend(res, info){
-    var translateKey = '131784c1d38c4a0ca28dc5e59c42d088';
+function analyzeText(res, text){
+    var analyzeKey = "e76904075f934781bafe5fdc37e51450";
+    var post_option = {
+        method: 'post',
+        url: 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/keyPhrases',
+        headers:{
+            "Content-Type": 'application/json',
+            "Ocp-Apim-Subscription-Key": analyzeKey
+        },
+        json: true,
+        body:{
+            "documents": [
+                {
+                  "language": "en",
+                  "id": "string",
+                  "text": text
+                }
+              ]
+        }
+    }
+    request.post(post_option, function(err, analyze_res, next){
+        console.log(analyze_res.body);
+        console.log(analyze_res.body.documents[0].keyPhrases);
+        var keywords = analyze_res.body.documents[0].keyPhrases;
+        translateText(res, keywords)
+    })
+}
+
+
+
+
+
+function translateText(res, text){
+    var translateKey = "131784c1d38c4a0ca28dc5e59c42d088";
     
     var post_option = {
         url: 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken?Subscription-Key='+translateKey, 
         body : ""
     }
     
+    // Obtain Microsoft translate Auth key
+    // Because Microsoft translate Auth is refreshed every 10 minutes, so you must obtain new Auth key
+    
+    request.post(post_option, function(err, Auth_res, next){
+        
+        var AuthKey = Auth_res.body
+        var url = 'https://api.microsofttranslator.com/v2/http.svc/Translate?appid=Bearer '+AuthKey+"&text="+text+"&from=en&to=ko"
+        
+        var get_option = {
+            url: url,
+            headers:{'Accept': 'application/xml'}
+        }
+        
+        request.get(get_option, function(err, translate_res, next){
+            
+            // XML to Json Parser
+            // The translation result is XML type
+            
+            xml2js(translate_res.body, function(err, parse_res){
+                var translateResultList = parse_res.string._.split(', ');
+                console.log(parse_res.string._);
+                console.log(translateResultList);
+                
+                var sampleKeyword = '시간'
+                var flag = false;
+                for(var i = 0; i < translateResultList.length; i++){
+                    flag = translateResultList[i].includes(sampleKeyword)
+                    console.log(translateResultList[i].includes(sampleKeyword));
+                    if(flag) break;
+                }
+                
+                kakaotalkSendMsg(res, flag);
+            })
+        })
+    })
+}
+
+function translate(res, text){
+    var translateKey = "131784c1d38c4a0ca28dc5e59c42d088";
+    var post_option = {
+        url: 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken?Subscription-Key='+translateKey, 
+        body : ""
+    }
+    
+    // Obtain Microsoft translate Auth key
+    // Because Microsoft translate Auth is refreshed every 10 minutes, so you must obtain new Auth key
+    
+    request.post(post_option, function(err, Auth_res, next){
+        var msg = info.text;
+        var confidence = info.confidence;
+        
+        var AuthKey = Auth_res.body
+        var url = 'https://api.microsofttranslator.com/v2/http.svc/Translate?appid=Bearer '+AuthKey+"&text="+encodeURIComponent(text)+"&from=ko&to=en"
+        
+        var get_option = {
+            url: url,
+            headers:{'Accept': 'application/xml'}
+        }
+        
+        request.get(get_option, function(err, translate_res, next){
+            
+            xml2js(translate_res.body, function(err, parse_res){
+                console.log(parse_res.string._);
+                analyzeText(res, parse_res.string._);
+                
+            })
+        })
+    })
+}
+
+
+//var sampleText = "The API returns a numeric score between 0 and 1. Scores close to 1 indicate positive sentiment and scores close to 0 indicate negative sentiment. Sentiment score is generated using classification techniques. The input features of the classifier include n-grams, features generated from part-of-speech tags, and word embeddings. English, French, Spanish and Portuguese text are supported."
+//
+//analyzeText(sampleText);
+
+
+
+// Kakaotalk Send Translated Message by Microsoft Translate API
+function translateSend(res, info){
+    var translateKey = "131784c1d38c4a0ca28dc5e59c42d088";
+    
+    var post_option = {
+        url: 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken?Subscription-Key='+translateKey, 
+        body : ""
+    }
+    
+    // Obtain Microsoft translate Auth key
+    // Because Microsoft translate Auth is refreshed every 10 minutes, so you must obtain new Auth key
     request.post(post_option, function(err, Auth_res, next){
         var msg = info.text;
         var confidence = info.confidence;
@@ -272,6 +391,7 @@ function kakaotalkAnalyzePhoto(res, img_url){
             
             
         }
+        // Other default Photo 
         else translateSend(res, info);
         
     })
@@ -424,8 +544,9 @@ app.post('/message', function(req, res){
         kakaotalkAnalyzePhoto(res, content);
     }
     else if(type == "text"){
+//        console.log(content.includes("셔틀"));
         // Time Table
-        if(content == "시간표" || content == "셔틀" || content == "버스" || content == "셔틀버스" || content == "셔틀 버스"){
+        if(content.includes("셔틀") || content.includes("버스")){
 
             ref.child('Success/ShuttleBus').push().set({
                'user_key' : user_key,
@@ -438,7 +559,7 @@ app.post('/message', function(req, res){
 
         }
         // Help
-        else if(content == "도움말" || content == "도움" || content == "사용법"){
+        else if(content.includes("도움") || content.includes("사용법")){
             ref.child('Success/Help').push().set({
                'user_key' : user_key,
                 'text': content,
@@ -448,7 +569,7 @@ app.post('/message', function(req, res){
 
         }
         // Weather
-        else if(content == "날씨" || content == "추워" || content == "오늘 날씨"){
+        else if(content.includes("날씨")){
             ref.child('Success/Weather').push().set({
                'user_key' : user_key,
                 'text': content,
@@ -456,7 +577,7 @@ app.post('/message', function(req, res){
             });
             kakaotalkSendWeather(res);
         }
-        else if(content == "페달로"){
+        else if(content.includes("페달로") || content.includes("자전거")){
             ref.child('Success/Pedalro').push().set({
                'user_key' : user_key,
                 'text': content,
@@ -466,7 +587,7 @@ app.post('/message', function(req, res){
 
         }
         // Food
-        else if(content == "식단" || content == "식단표" || content == "배고파" || content == "밥"){
+        else if(content.includes("식단") || content.includes("밥") || content.includes("배고")){
             ref.child('Success/Food').push().set({
                'user_key' : user_key,
                 'text': content,
@@ -518,6 +639,7 @@ app.post('/message', function(req, res){
 
             });
             kakaotalkSendMsg(res, "아직 제가 모르는 말이에요... \n제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
+//            translate(res, content);
 
         }
         
