@@ -557,6 +557,8 @@ function getShuttleTimeTable(res, place){
             console.log(curGetTime + '\t' + tableGetTime);
             if(curGetTime < tableGetTime){
                 console.log(table[place][i]);
+                var min = (tableGetTime - curGetTime) / (1000 * 60);
+                kakaotalkSendMsg(res, '가장 빠르게 도착하는 시간은 ' + table[place][i] + ' 이며 도착까지 약 '+min+'분 남았습니다.');
                 return;
             }
         }
@@ -569,7 +571,8 @@ function getShuttleTimeTable(res, place){
                 console.log(curGetTime + '\t' + tableGetTime);
                 if(curGetTime < tableGetTime){
                     console.log(table.cycle[i]);
-                    kakaotalkSendMsg(res, table.cycle[i]);
+                    var min = (tableGetTime - curGetTime) / (1000 * 60);
+                    kakaotalkSendMsg(res, '가장 빠르게 도착하는 시간은 '+table.cycle[i]+ ' 이며 도착까지 약 '+min+'분 남았습니다.');
                     return;
                 }
             }
@@ -585,7 +588,8 @@ function getShuttleTimeTable(res, place){
                 console.log(curGetTime + '\t' + tableGetTime);
                 if(curGetTime < tableGetTime){
                     console.log(table[place+'Cycle'][i]);
-                    kakaotalkSendMsg(res, table[place+'Cycle'][i]);
+                    var min = (tableGetTime - curGetTime) / (1000 * 60);
+                    kakaotalkSendMsg(res, '가장 빠르게 도착하는 시간은 ' + table[place+'Cycle'][i]+ ' 이며 도착까지 약 '+min+'분 남았습니다.');
                     return;
                 }
             }
@@ -619,7 +623,7 @@ app.post('/message', function(req, res){
 //        console.log(content.includes("셔틀"));
         // Time Table
 //        if(content.includes("셔틀") || content.includes("버스") || content.includes("시간표")){
-        if( content.includes("버스") || content.includes("시간표")){
+        if(content.includes("셔틀버스") || content.includes("버스") || content.includes("시간표")){
 
             ref.child('Success/ShuttleBus').push().set({
                'user_key' : user_key,
