@@ -529,7 +529,7 @@ function kakaotalkSendPedalro(res){
 
 
 //console.log(getTimeStamp());
-function getShuttleTimeTable(res, place){
+function getShuttleTimeTable(res, place, stationName){
     
     var d = new Date();
     var week = d.getDay();
@@ -557,8 +557,8 @@ function getShuttleTimeTable(res, place){
             console.log(curGetTime + '\t' + tableGetTime);
             if(curGetTime < tableGetTime){
                 console.log(table[place][i]);
-                var min = (tableGetTime - curGetTime) / (1000 * 60);
-                kakaotalkSendMsg(res, '가장 빠르게 도착하는 시간은 ' + table[place][i] + ' 이며 도착까지 약 '+min+'분 남았습니다.');
+                var min = (tableGetTime - curGetTime) / (1000 * 60).toFixed(2);
+                kakaotalkSendMsg(res, stationName+'정류장에 가장 빠르게 도착하는 시간은 ' + table[place][i] + ' 이며 도착까지 약 '+min+'분 남았습니다.');
                 return;
             }
         }
@@ -571,8 +571,8 @@ function getShuttleTimeTable(res, place){
                 console.log(curGetTime + '\t' + tableGetTime);
                 if(curGetTime < tableGetTime){
                     console.log(table.cycle[i]);
-                    var min = (tableGetTime - curGetTime) / (1000 * 60);
-                    kakaotalkSendMsg(res, '가장 빠르게 도착하는 시간은 '+table.cycle[i]+ ' 이며 도착까지 약 '+min+'분 남았습니다.');
+                    var min = (tableGetTime - curGetTime) / (1000 * 60).toFixed(2);
+                    kakaotalkSendMsg(res, '정류장에 가장 빠르게 도착하는 시간은 '+table.cycle[i]+ ' 이며 도착까지 약 '+min+'분 남았습니다.');
                     return;
                 }
             }
@@ -588,8 +588,8 @@ function getShuttleTimeTable(res, place){
                 console.log(curGetTime + '\t' + tableGetTime);
                 if(curGetTime < tableGetTime){
                     console.log(table[place+'Cycle'][i]);
-                    var min = (tableGetTime - curGetTime) / (1000 * 60);
-                    kakaotalkSendMsg(res, '가장 빠르게 도착하는 시간은 ' + table[place+'Cycle'][i]+ ' 이며 도착까지 약 '+min+'분 남았습니다.');
+                    var min = (tableGetTime - curGetTime) / (1000 * 60).toFixed(2);
+                    kakaotalkSendMsg(res, '정류장에 가장 빠르게 도착하는 시간은 ' + table[place+'Cycle'][i]+ ' 이며 도착까지 약 '+min+'분 남았습니다.');
                     return;
                 }
             }
@@ -599,6 +599,7 @@ function getShuttleTimeTable(res, place){
     })
 }
 
+// Kakaotalk Send Initialize function
 app.get('/keyboard', function(req, res){
     res.send({
         "type" : "buttons",
@@ -635,22 +636,22 @@ app.post('/message', function(req, res){
             kakaotalkSendBtn(res, "탑승 위치를 선택해주세요.", stationList);
         }
         else if(content == "셔틀콕 → 한대앞역"){
-            getShuttleTimeTable(res, 'shuttleA');
+            getShuttleTimeTable(res, 'shuttleA', content);
         }
         else if(content == "셔틀콕 → 예술인APT"){
-            getShuttleTimeTable(res, 'shuttleB');
+            getShuttleTimeTable(res, 'shuttleB', content);
         }
         else if(content == "셔틀콕 반대편"){
-            getShuttleTimeTable(res, 'shuttle_opposite');
+            getShuttleTimeTable(res, 'shuttle_opposite', content);
         }
         else if(content == "제 2공학관"){
-            getShuttleTimeTable(res, 'engin2');
+            getShuttleTimeTable(res, 'engin2', content);
         }
         else if(content == "한대앞역"){
-            getShuttleTimeTable(res, 'subway');
+            getShuttleTimeTable(res, 'subway', content);
         }
         else if(content == "예술인APT"){
-            getShuttleTimeTable(res, 'terminal');
+            getShuttleTimeTable(res, 'terminal', content);
         }
         // Help
         else if(content.includes("도움") || content.includes("사용법")){
@@ -792,7 +793,6 @@ app.get('/weather', function(req, res){
     }); 
 });
 
-
 // 공지사항
 app.get('/notice', function(req, res){
     res.render('notice');
@@ -802,7 +802,6 @@ app.get('/notice', function(req, res){
 app.get('/food_view', function(req, res){
     res.render('food');
 })
-
 
 // 한양대학교 학식 크롤링
 app.get('/food',function(req, page_res){
@@ -873,10 +872,7 @@ app.get('/food',function(req, page_res){
     })
 })
 
-
-
 // 안산시 페달로
-
 app.get('/pedalro', function(req, res){
     var url = 'http://www.pedalro.kr/station/station.do?method=stationState&menuIdx=st_01';
     request.get(url, function(err, pedalro_res, next){
