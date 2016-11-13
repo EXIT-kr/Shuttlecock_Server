@@ -91,6 +91,7 @@ var post_id_list = [];
 
 // Get TimeStamp to String
 function getTimeStamp(){
+//    var today = new Date(Date.parse(new Date()) + 1000* 60 * 60 * 9);
     var today = new Date();
 
     var yyyy = today.getFullYear();
@@ -115,6 +116,7 @@ function getTimeStamp(){
 
     return today+curtime;
 }
+
 
 
 // Kakaotalk Yellow ID API
@@ -523,6 +525,76 @@ function kakaotalkSendPedalro(res){
     })
 }
 
+
+
+
+//console.log(getTimeStamp());
+function getShuttleTimeTable(res, place){
+    
+    var d = new Date();
+    var week = d.getDay();
+    var shuttleURL = 'http://shuttlecock.azurewebsites.net/timetable/';
+    
+//    week = 1;
+    // Sunday
+    if(week == 0) shuttleURL += 'sun_table.json';
+    // Saturday
+    else if(week == 6) shuttleURL += 'sat_table.json';
+    // Monday to Friday
+    else shuttleURL += 'table.json'
+        
+    request.get(shuttleURL, function(err, table_res, next){
+        var table = JSON.parse(table_res.body)
+        console.log(table);
+        console.log(table[place]);
+    //    console.log(getTimeStamp().split(' ')[1].split(':'));
+        var curTime = getTimeStamp().split(' ')[1].split(':');
+        var curGetTime = parseInt(curTime[0]) * 60* 60* 1000 + parseInt(curTime[1]) * 60 * 1000 + parseInt(curTime[2]) * 1000;
+        
+        for(var i = 0; i < table[place].length; i++){
+            var tableTime = table[place][i].trim().split(':');
+            var tableGetTime = parseInt(tableTime[0]) * 60 * 60 * 1000 + parseInt(tableTime[1]) * 60 * 1000;
+            console.log(curGetTime + '\t' + tableGetTime);
+            if(curGetTime < tableGetTime){
+                console.log(table[place][i]);
+                return;
+            }
+        }
+        
+        if(place == "shuttleA" || place == "shuttleB"){
+            for(var i = 0; i < table.cycle.length; i++){
+                var tableTime = table.cycle[i].trim().split(':');
+                var tableGetTime = parseInt(tableTime[0]) * 60 * 60 * 1000 + parseInt(tableTime[1]) * 60 * 1000;
+                
+                console.log(curGetTime + '\t' + tableGetTime);
+                if(curGetTime < tableGetTime){
+                    console.log(table.cycle[i]);
+                    kakaotalkSendMsg(res, table.cycle[i]);
+                    return;
+                }
+            }
+        }
+        else if(place == "engin2" || place == "shuttle_opposite"){
+            kakaotalkSendMsg(res, '오늘은 운행이 종료되었습니다.');
+            return;
+        }
+        else{
+            for(var i = 0; i < table[place+'Cycle'].length; i++){
+                var tableTime = table[place+'Cycle'][i].trim().split(':');
+                var tableGetTime = parseInt(tableTime[0]) * 60 * 60 * 1000 + parseInt(tableTime[1]) * 60 * 1000;
+                console.log(curGetTime + '\t' + tableGetTime);
+                if(curGetTime < tableGetTime){
+                    console.log(table[place+'Cycle'][i]);
+                    kakaotalkSendMsg(res, table[place+'Cycle'][i]);
+                    return;
+                }
+            }
+        }
+        kakaotalkSendMsg(res, '오늘은 운행이 종료되었습니다.');
+        
+    })
+}
+
 app.get('/keyboard', function(req, res){
     res.send({
         "type" : "buttons",
@@ -546,17 +618,35 @@ app.post('/message', function(req, res){
     else if(type == "text"){
 //        console.log(content.includes("셔틀"));
         // Time Table
-        if(content.includes("셔틀") || content.includes("버스") || content.includes("시간표")){
+//        if(content.includes("셔틀") || content.includes("버스") || content.includes("시간표")){
+        if( content.includes("버스") || content.includes("시간표")){
 
             ref.child('Success/ShuttleBus').push().set({
                'user_key' : user_key,
                 'text': content,
                 'timeStamp': getTimeStamp()
             });
-
-            kakaotalkSendLabelMsg(res, "현재는 시간표 기능은 아직 구현되지 않았어요...\n빠른 시일내에 구현하도록 하겠습니다.\n\n구현되기 전까지 셔틀콕 웹 버전을 이용하는 것은 어떨까요?", "셔틀콕 웹 버전으로 이동하기", "http://셔틀콕.kr");
-
-
+            
+            var stationList = ['셔틀콕 → 한대앞역', '셔틀콕 → 예술인APT', '셔틀콕 반대편', '제 2공학관', '한대앞역', '예술인APT']
+            kakaotalkSendBtn(res, "탑승 위치를 선택해주세요.", stationList);
+        }
+        else if(content == "셔틀콕 → 한대앞역"){
+            getShuttleTimeTable(res, 'shuttleA');
+        }
+        else if(content == "셔틀콕 → 예술인APT"){
+            getShuttleTimeTable(res, 'shuttleB');
+        }
+        else if(content == "셔틀콕 반대편"){
+            getShuttleTimeTable(res, 'shuttle_opposite');
+        }
+        else if(content == "제 2공학관"){
+            getShuttleTimeTable(res, 'engin2');
+        }
+        else if(content == "한대앞역"){
+            getShuttleTimeTable(res, 'subway');
+        }
+        else if(content == "예술인APT"){
+            getShuttleTimeTable(res, 'terminal');
         }
         // Help
         else if(content.includes("도움") || content.includes("사용법")){
@@ -641,12 +731,8 @@ app.post('/message', function(req, res){
             kakaotalkSendMsg(res, "아직 제가 모르는 말이에요... \n제 도움이 필요하시면 '도움말' 이라고 입력해주세요!");
 //            translate(res, content);
 
-        }
-        
+        }    
     }
-    
-    
-    
     
 })
 
@@ -660,7 +746,6 @@ app.post('/friend', function(req, res){
     })
 })
 
-
 app.delete('/friend', function(req, res){
     res.send({
         "http status code" : 200,
@@ -673,9 +758,6 @@ app.delete('/friend', function(req, res){
 app.get('/test', function(req, res){
     res.render('test');
 })
-
-
-
 
 
 // Weather API

@@ -368,16 +368,19 @@
                 var subway_key = "4a674774446e796a363948536b7050";
 				var subway_url = "http://openapi.seoul.go.kr:8088/"+subway_key+"/json/SearchSTNTimeTableByIDService/1/300/1755/";
                 
+                // Sunday
                 if(week == 0){
 					$('#date_version').text('2016년 학기중 일요일 시간표');
 					url += "timetable/sun_table.json";
                     subway_url += "3/";
 				}
+                // Saturday
 				else if(week == 6){
 					$('#date_version').text('2016년 학기중 토요일 시간표');
 					url += "timetable/sat_table.json";
                     subway_url += "2/";
 				}
+                // Monday to Friday
 				else{
 					$('#date_version').text('2016년 학기중 평일 시간표');   
 					url += "timetable/table.json";
