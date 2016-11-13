@@ -551,8 +551,8 @@ function getShuttleTimeTable(res, place, stationName){
             console.log(curGetTime + '\t' + tableGetTime);
             if(curGetTime < tableGetTime){
                 console.log(table[place][i]);
-                var min = (tableGetTime - curGetTime) / (1000 * 60).toFixed(2);
-                kakaotalkSendMsg(res, stationName + '정류장에 가장 빠르게 도착하는 시간은 ' + table[place][i] + ' 이며 도착까지 약 '+min+'분 남았습니다.');
+                var min = Math.round((tableGetTime - curGetTime) / (1000 * 60));
+                kakaotalkSendMsg(res, stationName + ' 정류장에 가장 빠르게 도착하는 시간은 ' + table[place][i] + ' 이며 도착까지 약 '+min+'분 남았습니다.');
                 return;
             }
         }
@@ -565,8 +565,8 @@ function getShuttleTimeTable(res, place, stationName){
                 console.log(curGetTime + '\t' + tableGetTime);
                 if(curGetTime < tableGetTime){
                     console.log(table.cycle[i]);
-                    var min = (tableGetTime - curGetTime) / (1000 * 60).toFixed(2);
-                    kakaotalkSendMsg(res, stationName + '정류장에 가장 빠르게 도착하는 시간은 '+table.cycle[i]+ ' 이며 도착까지 약 '+min+'분 남았습니다.');
+                    var min = Math.round((tableGetTime - curGetTime) / (1000 * 60));
+                    kakaotalkSendMsg(res, stationName + ' 정류장에 가장 빠르게 도착하는 시간은 '+table.cycle[i]+ ' 이며 도착까지 약 '+min+'분 남았습니다.');
                     return;
                 }
             }
@@ -582,8 +582,8 @@ function getShuttleTimeTable(res, place, stationName){
                 console.log(curGetTime + '\t' + tableGetTime);
                 if(curGetTime < tableGetTime){
                     console.log(table[place+'Cycle'][i]);
-                    var min = (tableGetTime - curGetTime) / (1000 * 60).toFixed(2);
-                    kakaotalkSendMsg(res, stationName + '정류장에 가장 빠르게 도착하는 시간은 ' + table[place+'Cycle'][i]+ ' 이며 도착까지 약 '+min+'분 남았습니다.');
+                    var min = Math.round((tableGetTime - curGetTime) / (1000 * 60));
+                    kakaotalkSendMsg(res, stationName + ' 정류장에 가장 빠르게 도착하는 시간은 ' + table[place+'Cycle'][i]+ ' 이며 도착까지 약 '+min+'분 남았습니다.');
                     return;
                 }
             }
