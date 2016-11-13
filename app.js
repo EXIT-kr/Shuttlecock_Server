@@ -91,8 +91,8 @@ var post_id_list = [];
 
 // Get TimeStamp to String
 function getTimeStamp(){
-//    var today = new Date(Date.parse(new Date()) + 1000* 60 * 60 * 9);
-    var today = new Date();
+    var today = new Date(Date.parse(new Date()) + 1000* 60 * 60 * 9);
+//    var today = new Date();
 
     var yyyy = today.getFullYear();
     var dd = today.getDate();
