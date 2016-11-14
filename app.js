@@ -91,14 +91,15 @@ var post_id_list = [];
 
 // Get TimeStamp to String
 function getTimeStamp(){
+    // Microsoft Azure System is slower than Korea 9 hours
     var today = new Date(Date.parse(new Date()) + 1000* 60 * 60 * 9);
 //    var today = new Date();
-
+    
     var yyyy = today.getFullYear();
     var dd = today.getDate();
-    var MM = today.getMonth()+1; //January is 0!
-
-
+    // Becaouse January is 0!
+    var MM = today.getMonth()+1; 
+    
     var hh = today.getHours();
     var mm = today.getMinutes();
     var ss = today.getSeconds();
@@ -116,7 +117,6 @@ function getTimeStamp(){
 
     return today+curtime;
 }
-
 
 
 // Kakaotalk Yellow ID API
@@ -174,10 +174,7 @@ function kakaotalkSendLabelMsg(res, msg, label_msg, label_url){
 }
 
 
-
-
 // Microsoft Congitive API
-
 function analyzeText(res, text){
     var analyzeKey = "e76904075f934781bafe5fdc37e51450";
     var post_option = {
@@ -205,10 +202,6 @@ function analyzeText(res, text){
         translateText(res, keywords)
     })
 }
-
-
-
-
 
 function translateText(res, text){
     var translateKey = "131784c1d38c4a0ca28dc5e59c42d088";
@@ -332,7 +325,7 @@ function translateSend(res, info){
                     send_msg += "이번에는 맞출 수 있을 것같아요! "
                 }
                 send_msg += confidence +"% 의 확률로 이 사진은\n"
-                send_msg += transText +'\n사진 같아요 제가 맞나요?'
+                send_msg += transText +' 사진 같아요 제가 맞나요?'
                 
                 kakaotalkSendMsg(res, send_msg);
             })
@@ -601,24 +594,21 @@ app.get('/keyboard', function(req, res){
     })
 })
 
+// Kakaotalk Neuron System
 app.post('/message', function(req, res){
     var content = req.body.content;
     var user_key = req.body.user_key;
     var type = req.body.type;
-    
-    
-    console.log(req.body);
-    console.log(content);
-    
-    
+ 
+    // KaKaotalk Analyze Photo
+    // Age or statement ect..
     if(type == "photo"){
         kakaotalkAnalyzePhoto(res, content);
     }
     else if(type == "text"){
-//        console.log(content.includes("셔틀"));
         // Time Table
 //        if(content.includes("셔틀") || content.includes("버스") || content.includes("시간표")){
-        if(content.includes("셔틀버스") || content.includes("버스") || content.includes("시간표")){
+        if(content.includes("셔틀버스") || content.includes("버스") || content.includes("시간표") || content.includes("쎠뜰") || content.includes("tuxmf")){
 
             ref.child('Success/ShuttleBus').push().set({
                'user_key' : user_key,
@@ -658,7 +648,7 @@ app.post('/message', function(req, res){
 
         }
         // Weather
-        else if(content.includes("날씨")){
+        else if(content.includes("날씨") || content.includes("추워") || content.includes("더워")){
             ref.child('Success/Weather').push().set({
                'user_key' : user_key,
                 'text': content,
@@ -676,7 +666,7 @@ app.post('/message', function(req, res){
 
         }
         // Food
-        else if(content.includes("식단") || content.includes("밥") || content.includes("배고")){
+        else if(content.includes("식단") || content.includes("밥") || content.includes("배고") || content == "메뉴"){
             ref.child('Success/Food').push().set({
                'user_key' : user_key,
                 'text': content,
@@ -734,7 +724,6 @@ app.post('/message', function(req, res){
     }
     
 })
-
 
 app.post('/friend', function(req, res){
     res.send({
@@ -910,9 +899,8 @@ app.get('/pedalro', function(req, res){
 // Facebook Graph API
 var url = '?fields=comments{from,message,like_count},likes,full_picture,message,attachments,updated_time'
 //var url = '?fields=attachments'
-
 var info = '?fields=fan_count,about,name'
-//대나무숲    
+// 대나무숲    
 app.get("/hyubamboo", function(req, res) {
     FB.api('hyubamboo/feed'+url, function(fb_res){
         FB.api('hyubamboo'+info, function(page_info){
@@ -921,7 +909,8 @@ app.get("/hyubamboo", function(req, res) {
         })
     })
 })
-//한양대 에리카 대신 전해드립니다
+
+// 한양대 에리카 대신 전해드립니다
 app.get("/daesin", function(req, res) {
     FB.api('ericadaesin/feed'+url, function(fb_res){
         FB.api('ericadaesin'+info, function(page_info){
@@ -931,7 +920,7 @@ app.get("/daesin", function(req, res) {
     })
 })
 
-//한에사피
+// 한에사피
 app.get("/love", function(req, res) {
     FB.api('EricaLoveMaker/feed'+url, function(fb_res){
         FB.api('EricaLoveMaker'+info, function(page_info){
@@ -941,7 +930,7 @@ app.get("/love", function(req, res) {
     })
 })
 
-//총학생회
+// 총학생회
 app.get("/student", function(req, res) {
     FB.api('hanyangericagsa/feed'+url, function(fb_res){
         FB.api('hanyangericagsa'+info, function(page_info){
@@ -951,7 +940,7 @@ app.get("/student", function(req, res) {
     })
 })
 
-//동아리 연합회
+// 동아리 연합회
 app.get("/ca", function(req, res) {
     FB.api('HYUnivCA/feed'+url, function(fb_res){
         FB.api('HYUnivCA'+info, function(page_info){
@@ -961,8 +950,7 @@ app.get("/ca", function(req, res) {
     })
 })
 
-
-//기숙사 자치회
+// 기숙사 자치회
 app.get("/dorm", function(req, res) {
     FB.api('ericadormitory/feed'+url, function(fb_res){
         FB.api('ericadormitory'+info, function(page_info){
@@ -972,7 +960,7 @@ app.get("/dorm", function(req, res) {
     })
 })
 
-
+// 사자가 심심할 때
 app.get('/boring', function(req, res){
     res.render('boring');
 });
