@@ -634,7 +634,7 @@ app.post('/message', function(req, res){
         else if(content == "한대앞역"){
             getShuttleTimeTable(res, 'subway', content);
         }
-        else if(content == "예술인APT"){
+        else if(content == "예술인APT" || content == "예술인아파트"){
             getShuttleTimeTable(res, 'terminal', content);
         }
         // Help
@@ -709,6 +709,9 @@ app.post('/message', function(req, res){
         }
         else if(content == "셔틀콕"){
             kakaotalkSendMsg(res, "넵!! 제가 바로 그 셔틀콕입니다.");
+        }
+        else if(content.includes("시발")){
+            kakaotalkSendMsg(res, "제가 잘못 들었나요?");
         }
         else{
             ref.child('Fail').push().set({
