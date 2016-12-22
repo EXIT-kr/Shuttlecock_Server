@@ -14,7 +14,7 @@
         <link href="/javascripts/jquery.bxslider/jquery.bxslider.css" rel="stylesheet" />
         <!--countDown-->
 		<script src="countdown/jquery.countdown.js"></script>
-        
+
         <title>셔틀콕</title>
         <style>
             @import url(https://cdn.rawgit.com/theeluwin/NotoSansKR-Hestia/master/stylesheets/NotoSansKR-Hestia.css);
@@ -37,7 +37,7 @@
                 box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
             }
             #rocation{
-                
+
 /*                background: #323742;*/
                 color: white;
                 text-align: center;
@@ -81,13 +81,13 @@
                 color: white;
                 font-weight: 400;
             }
-                
+
             #footer{
                 background: white;
                 width: 100%;
                 position: fixed;
                 bottom: 0px;
-                
+
             }
             .mainCard{
                 margin: 15px auto;
@@ -106,12 +106,12 @@
                 border-radius: 3px;
                 padding: 15px;
             }
-            
+
             .slide{
                 margin: 15px;
             }
             .card h1{
-                
+
             }
             .card h3{
                 font-weight: 400;
@@ -142,7 +142,7 @@
                 left: 0px;
             }
             .bx-viewport{
-                
+
             }
             .slidesjs-pagination {
               margin: 6px 0 0;
@@ -163,7 +163,7 @@
               float: left;
               overflow: hidden;
             }
-            
+
             .slidesjs-pagination li a.active,
             .slidesjs-pagination li a:hover.active {
               background-position: 0 -13px
@@ -173,17 +173,17 @@
               background-position: 0 -26px
             }
         </style>
-        
+
         <script>
-            
-            
+
+
             function getTimetable(url, type){
-                
+
                 $.getJSON(url, function( data ) {
                     var curData;
                     var arrive;
                     var icon;
-                    
+
                     if(type == 0){
                         curData = data.shuttleA;
                         arrive = "한대앞역"
@@ -219,8 +219,8 @@
                         arrive = "셔틀콕"
                         icon = '<i class="xi-home"></i>'
                     }
-                    
-                    
+
+
                     for(var i = 0; i < curData.length; i++){
                         var card = $('<div class="card">');
                         var left = $('<div class="pull-left" style="text-align:center; margin-left:7px">');
@@ -243,10 +243,10 @@
                         var yyyy = today.getFullYear();
                         if(dd<10){
                             dd='0'+dd
-                        } 
+                        }
                         if(mm<10){
                             mm='0'+mm
-                        } 
+                        }
                         var today = yyyy+'/'+mm+'/'+dd;
 
                         var content;
@@ -261,14 +261,14 @@
                     }
 
                     var cycleData;
-                    if(type == 0) cycleData = data.cycle;    
+                    if(type == 0) cycleData = data.cycle;
                     else if(type == 1) cycleData = data.cycle;
                     else if(type == 2) cycleData = data.subwayCycle;
                     else if(type == 3) cycleData = data.terminalCycle;
                     else if(type == 4) return;
                     else return;
-                    
-                    
+
+
                     for(var i = 0; i < cycleData.length; i++){
                         var card = $('<div class="card">');
                         var left = $('<div class="pull-left" style="text-align:center; margin-left:10px">');
@@ -292,10 +292,10 @@
                         var yyyy = today.getFullYear();
                         if(dd<10){
                             dd='0'+dd
-                        } 
+                        }
                         if(mm<10){
                             mm='0'+mm
-                        } 
+                        }
                         var today = yyyy+'/'+mm+'/'+dd;
 
                         var content;
@@ -305,14 +305,14 @@
                         }).on('finish.countdown', function(event){
                             $(this).parent().parent().remove();
                         });;
-                        
+
 
                         $('#contents').append(card);
                     }
 
 				});
             }
-            
+
             function getPedalroTime(){
                 $.ajax({
                     url: '/pedalro',
@@ -321,75 +321,92 @@
                         console.log(data);
                         $('#bicycle_hanyang').text(data[0].val+' 대');
                         $('#bicycle_dorm').text(data[1].val+' 대');
-                        
+
                         var today = new Date();
-                        
+
                         var yyyy = today.getFullYear();
                         var dd = today.getDate();
                         var MM = today.getMonth()+1; //January is 0!
-                        
-                        
+
+
                         var hh = today.getHours();
                         var mm = today.getMinutes();
                         var ss = today.getSeconds();
-                        
+
                         if(dd < 10) dd = '0' + dd;
                         if(MM < 10) MM = '0' + MM;
-                        
+
                         if(hh < 10) hh = '0' + hh;
                         if(mm < 10) mm = '0' + mm;
                         if(ss < 10) ss = '0' + ss;
-                        
-                        
+
+
                         var today = yyyy+'-'+MM+'-'+dd+' ';
                         var curtime = hh+':'+mm+':'+ss;
-                        
+
                         console.log('update!');
-                        
+
                         $('#realTime').html( today+curtime +' 업데이트됨 <i class="xi-sync"></i>');
                     }
                 })
             }
-            
-            
-            
-            
-            
+
+
+
+
+
 //            var count = 0;
             $(function(){
-                
-                
-                
-                
+
+
+
+
                 var d = new Date();
 				var week = d.getDay();
 //				var url = "http://exitsoft.co.kr/test/";
                 var url = "/"
                 var subway_key = "4a674774446e796a363948536b7050";
 				var subway_url = "http://openapi.seoul.go.kr:8088/"+subway_key+"/json/SearchSTNTimeTableByIDService/1/300/1755/";
-                
+
+                // // Sunday
+                // if(week == 0){
+        				// 	$('#date_version').text('2016년 학기중 일요일 시간표');
+        				// 	url += "timetable/sun_table.json";
+                //             subway_url += "3/";
+        				// }
+                //         // Saturday
+        				// else if(week == 6){
+        				// 	$('#date_version').text('2016년 학기중 토요일 시간표');
+        				// 	url += "timetable/sat_table.json";
+                //             subway_url += "2/";
+        				// }
+                //         // Monday to Friday
+        				// else{
+        				// 	$('#date_version').text('2016년 학기중 평일 시간표');
+        				// 	url += "timetable/table.json";
+                //             subway_url += "1/";
+        				// }
+
                 // Sunday
                 if(week == 0){
-					$('#date_version').text('2016년 학기중 일요일 시간표');
-					url += "timetable/sun_table.json";
-                    subway_url += "3/";
-				}
-                // Saturday
-				else if(week == 6){
-					$('#date_version').text('2016년 학기중 토요일 시간표');
-					url += "timetable/sat_table.json";
-                    subway_url += "2/";
-				}
-                // Monday to Friday
-				else{
-					$('#date_version').text('2016년 학기중 평일 시간표');   
-					url += "timetable/table.json";
-                    subway_url += "1/";
-				}
-                
-                
-                
-                
+                  $('#date_version').text('2016년 계절학기 일요일 시간표');
+                  url += "timetable/sun_table.json";
+                  subway_url += "3/";
+                }
+                        // Saturday
+                else if(week == 6){
+                  $('#date_version').text('2016년 계절학기 토요일 시간표');
+                  url += "timetable/sat_vac.json";
+                  subway_url += "2/";
+                }
+                        // Monday to Friday
+                else{
+                  $('#date_version').text('2016년 계절학기 평일 시간표');
+                  url += "timetable/vac_table.json";
+                  subway_url += "1/";
+                }
+
+
                 $.ajax({
                     url: 'weather',
                     type: 'GET',
@@ -398,15 +415,15 @@
                         var timeRelease = data.time.slice(0,4) + '-' +data.time.slice(4,6) + '-' + data.time.slice(6,8) + ' ' +data.time.slice(8,10) + ':' + data.time.slice(10,12);
                         var temperature = data.data[0].temp;
                         var current_sky = data.data[0].wfKor;
-                        
-                        
+
+
                         $('#temperature').text(temperature + " °C");
                         $('#timeRelease').html(timeRelease + ' 업데이트됨 <i class="xi-sync"></i>');
-                        
+
                         if(current_sky == '맑음'){
                             $('#weather_img').attr('src','images/weather/sunny_icon.png');
                             $('#weather').css('background-image','url(images/weather/sunny_bg.jpg)');
-                            $('#weather_msg').html('오늘은 맑은 하루가 예상됩니다! <br>기분 좋은 하루되세요'); 
+                            $('#weather_msg').html('오늘은 맑은 하루가 예상됩니다! <br>기분 좋은 하루되세요');
                         }
                         else if(current_sky == '구름 조금'){
                             $('#weather_img').attr('src','images/weather/little_cloud_icon.png');
@@ -444,57 +461,57 @@
                         // $('#weather_msg').html('오늘은 벼락이 친데요!<br>큰 비가 올지도 몰라요');
                     }
                 })
-                
-                
-                
-                
-                
+
+
+
+
+
                 // 한대앞역 정보
                 $.ajax({
                     url: subway_url+'1',
                     type: 'GET',
                     crossDomain: true,
                     dataType: 'json',
-                    success: function(data) { 
+                    success: function(data) {
                         var array = data.SearchSTNTimeTableByIDService.row;
                         var totalCount = data.SearchSTNTimeTableByIDService.list_total_count;
 //                        $('#test').text(array[0].ARRIVETIME);
-                        
-                        
-                    
+
+
+
                         var today = new Date();
-                        
+
                         var yyyy = today.getFullYear();
                         var dd = today.getDate();
                         var MM = today.getMonth()+1; //January is 0!
-                        
-                        
+
+
                         var hh = today.getHours();
                         var mm = today.getMinutes();
                         var ss = today.getSeconds();
-                        
+
                         if(dd < 10) dd = '0' + dd;
                         if(MM < 10) MM = '0' + MM;
-                        
+
                         if(hh < 10) hh = '0' + hh;
                         if(mm < 10) mm = '0' + mm;
                         if(ss < 10) ss = '0' + ss;
-                        
-                        
+
+
                         var today = yyyy+'/'+MM+'/'+dd;
                         var curtime = hh+':'+mm+':'+ss;
-                        
+
                         var content;
                         var currentTime = $('<div>');
-                        
+
                         var count = 0;
                         var temp = array[count].ARRIVETIME;
-                        
+
                         while(curtime > array[count].ARRIVETIME){
                             count++;
                         }
-                        
-                        
+
+
                         currentTime.countdown(today+' '+array[count].ARRIVETIME, function(event) {
                             $(this).html(event.strftime(array[count].SUBWAYENAME + '행 <br> <h3>%H:%M:%S</h3>'));
                          // content = event.strftime('%H:%M:%S');
@@ -503,63 +520,63 @@
 //                            $(this).parent().parent().hide();
 //                            $(this).countdown(today+' '+array[count++].ARRIVETIME);
                         });
-//                        
+//
                         $('#subway > .left > h4').html(currentTime);
-                        
+
 //                        alert(array);
-                    
+
                     },
                     error: function(data) {
-//                        alert(data.body); 
+//                        alert(data.body);
 //                        $('#msg').text(data.body);
                     }
-                }); 
-                
+                });
+
                 $.ajax({
                     url: subway_url+'2',
                     type: 'GET',
                     crossDomain: true,
                     dataType: 'json',
-                    success: function(data) { 
+                    success: function(data) {
                         var array = data.SearchSTNTimeTableByIDService.row;
                         var totalCount = data.SearchSTNTimeTableByIDService.list_total_count;
 //                        $('#test').text(array[0].ARRIVETIME);
-                        
-                        
-                    
+
+
+
                         var today = new Date();
-                        
+
                         var yyyy = today.getFullYear();
                         var dd = today.getDate();
                         var MM = today.getMonth()+1; //January is 0!
-                        
-                        
+
+
                         var hh = today.getHours();
                         var mm = today.getMinutes();
                         var ss = today.getSeconds();
-                        
+
                         if(dd < 10) dd = '0' + dd;
                         if(MM < 10) MM = '0' + MM;
-                        
+
                         if(hh < 10) hh = '0' + hh;
                         if(mm < 10) mm = '0' + mm;
                         if(ss < 10) ss = '0' + ss;
-                        
-                        
+
+
                         var today = yyyy+'/'+MM+'/'+dd;
                         var curtime = hh+':'+mm+':'+ss;
-                        
+
                         var content;
                         var currentTime = $('<div>');
-                        
+
                         var count = 0;
                         var temp = array[count].ARRIVETIME;
-                        
+
                         while(curtime > array[count].ARRIVETIME){
                             count++;
                         }
-                        
-                        
+
+
                         currentTime.countdown(today+' '+array[count].ARRIVETIME, function(event) {
                             $(this).html(event.strftime(array[count].SUBWAYENAME + '행 <br> <h3>%H:%M:%S</h3>'));
                          // content = event.strftime('%H:%M:%S');
@@ -569,68 +586,68 @@
 //                            $(this).parent().parent().hide();
 //                            $(this).countdown(today+' '+array[count++].ARRIVETIME);
                         });
-//                        
+//
                         $('#subway > .right > h4').html(currentTime);
-                        
+
 //                        alert(array);
-                    
+
                     },
                     error: function(data) { alert('Failed!'); }
                 });
-                
-                
+
+
                 // 셔틀버스 정보
                 // 0 : 셔틀콕 to 한대앞역
                 // 1 : 셔틀콕 to 예술인
                 // 2 : 한대앞역
                 // 3 : 예술인
                 // 4 : 기숙사
-                
+
                 getTimetable(url, 0);
- 
+
                 // 페달로
                 getPedalroTime();
-                
-                
+
+
                 // UI/UX
-                
+
                 $("#hide_rocation").hide();
                 $("#rocation").click(function(){
-                    $("#hide_rocation").slideToggle('fast');    
+                    $("#hide_rocation").slideToggle('fast');
                 });
                 $('#bars').click(function(){
-                    $("#hide_rocation").slideToggle('fast');    
+                    $("#hide_rocation").slideToggle('fast');
                 });
 
                 $('#slides').slidesjs({
                     height: 900,
                     navigation: false
                 })
-                
+
                 $('#btn_home').click(function(){
                     $('#contents').html(' ');
                     getTimetable(url, 0);
                     $('#current_rocation').text('셔틀콕 (한대앞역행)');
                 });
-                
+
                 $('#btn_home_to_term').click(function(){
                     $('#contents').html(' ');
                     getTimetable(url, 1);
                     $('#current_rocation').text('셔틀콕 (예술인행)');
                 });
-                
+
                 $('#btn_subway').click(function(){
                     $('#contents').html(' ');
                     getTimetable(url, 2);
                     $('#current_rocation').text('한대앞역');
                 });
-                
+
                 $('#btn_terminal').click(function(){
                     $('#contents').html(' ');
                     getTimetable(url, 3);
                     $('#current_rocation').text('예술인APT');
                 });
-                
+
                 $('#btn_dorm').click(function(){
                     $('#contents').html(' ');
                     getTimetable(url, 4);
@@ -650,7 +667,7 @@
                     getPedalroTime();
                     console.log('click!');
                 });
-                
+
             })
         </script>
     </head>
@@ -661,25 +678,25 @@
 <!--            <h2 class="right">셔틀콕</h2>-->
             <div class="clear"></div>
         </div>
-        
-        
+
+
         <div id="rocation">
             <span class="left" style="width:50%; background:#323742">현재위치</span>
             <span id ="current_rocation" class="right" style="width:50%; background:#888">셔틀콕 (한대앞역행)</span>
             <div class="clear"></div>
-            
+
             <div id="hide_rocation">
                 <h4 id="btn_home">셔틀콕 → 한대앞역</h4>
                 <h4 id="btn_home_to_term">셔틀콕 → 예술인APT</h4>
                 <h4 id="btn_home_opposite">셔틀콕 반대편</h4>
                 <h4 id="btn_engine">제 2공학관</h4>
-                <h4 id="btn_subway">한대앞역</h4>    
+                <h4 id="btn_subway">한대앞역</h4>
                 <h4 id="btn_terminal">예술인APT</h4>
-                
-                <h4 id="btn_dorm">기숙사</h4>    
+
+                <h4 id="btn_dorm">기숙사</h4>
             </div>
         </div>
-        
+
         <div class="card" style="margin-bottom:0px;">
             <h4><i class="xi-info-o"></i> 공지사항</h4>
             <h5 id="msg" style="margin:5px;">제 2공학관 시간표가 업데이트되었습니다.</h5>
@@ -701,11 +718,11 @@
             <div class="right" style="text-align:center;">
                 <h3><i class="xi-subway xi-2x"></i>한대앞행</h3>
             </div>
-            
-            
+
+
             <div class="clear"><br></div>
-            
-            
+
+
             <h5 class="right">더 많은 시간표 보기</h5>
             <div class="clear"></div>
         </div>
@@ -732,7 +749,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="mainCard" id="pedalro">
                 <div class="slide">
                     <h2>Pedalro</h2>
@@ -753,7 +770,7 @@
                     <h5 id="realTime" class="right"><i class="xi-sync"></i></h5>
                 </div>
             </div>
-            
+
             <div class="mainCard" id="weather">
                 <div class="slide">
                     <h2>Weather</h2>
@@ -784,7 +801,7 @@
                     </a>
                 </div>
 
-            
+
                 <div class="mainCard" id="social">
                     <a href="/boring">
                         <div class="slide">
@@ -795,16 +812,16 @@
                         </div>
                     </a>
                 </div>
-            
+
         </div>
         <h5 id="date_version" class="right" style="margin-top:5px;">2016년 2학기 학기중 시간표</h5>
         <div class="clear"></div>
-        
+
         <div id="contents"></div>
         <br>
         <br>
         <div id="footer">
-            
+
         </div>
     </body>
 </html>
