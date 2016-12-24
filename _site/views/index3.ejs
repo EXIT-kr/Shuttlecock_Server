@@ -1,0 +1,147 @@
+<!Doctype html>
+<html>
+    <head>
+        <title>facebook test</title>
+<!--        https://graph.facebook.com/oauth/access_token?client_id=607442856100225&client_secret=bbd5d253d9d6a761db06ebbc63a2a057&grant_type=client_credentials-->
+<!--        access_token=607442856100225|1PKH0ji8fyGRDC96ZGWkuQw8YHk-->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
+        <script type="text/javascript" src="jquery.ajax-cross-origin.min.js"></script>
+        <script>
+         window.fbAsyncInit = function() {
+           FB.init({
+             appId      : '607442856100225',
+             xfbml      : true,
+             version    : 'v2.7'
+           });
+             
+           FB.getLoginStatus(function(response) {
+             if (response.status === 'connected') {
+               console.log('Logged in.');
+               FB.api('/me/feed', 'post', {message: 'Hello, world!'});
+               
+             }
+             else {
+               FB.login(function(){
+                 // Note: The call will only work if you accept the permission request
+                 FB.api('/me/feed', 'post', {message: 'Hello, world!'});
+               }, {scope: 'publish_actions'});
+             }
+           });
+
+           FB.api('/hyubamboo/posts?access_token=607442856100225|1PKH0ji8fyGRDC96ZGWkuQw8YHk', function(response) {
+
+              console.log(response);
+            });
+             
+         };
+
+         (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "http://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+             
+             
+             
+          }(document, 'script', 'facebook-jssdk'));
+        </script>
+        
+        <script type="application/javascript">
+//            $(document).ready(function(){
+//                
+//                $.ajax({
+//                    url: 'https://openapi.naver.com/v1/search/local.xml?query=%EC%A3%BC%EC%8B%9D&display=10&start=1&sort=vote',
+////                    url : 'https://openapi.naver.com/v1/search/local.xml',
+////                    beforeSend: function (request){
+//////                        request.setRequestHeader("Host", 'openapi.naver.com');
+//////                        request.setRequestHeader("User-Agent", 'curl/7.43.0');
+////                        request.setRequestHeader("X-Naver-Client-Id", 'JllAghyZgkp5NcFY8yu6');
+////                        request.setRequestHeader("X-Naver-Client-Secret", 'fubWBULL_Q');
+////                        request.setRequestHeader("Content-Type", 'application/xml');
+////
+////                    },
+////                    type: 'GET',
+////                    dataType: 'jsonp',
+////                    crossDomain: true,
+////                    Accept: '*/*',
+//                    crossOrigin: true,
+//                    headers: {
+//                        
+////                        'Accept': '*/*',
+//                        'X-Naver-Client-Id': 'JllAghyZgkp5NcFY8yu6',
+//                        'X-Naver-Client-Secret': 'fubWBULL_Q'
+//                    },
+//                    success: function(data) { },
+//                    error: function(data) { alert('Failed!'); }
+//                });
+//                
+//                
+//            })
+        </script>
+        
+        <script>
+//             $(document).ready(function(){
+                
+//                 $.ajax({
+//                     url: 'https://openapi.naver.com/v1/search/local.xml?query=%EC%A3%BC%EC%8B%9D&display=10&start=1&sort=vote',
+//                     type: 'GET',
+// //                    crossOrigin: true,
+// //                    dataType: 'xml',
+// //                    contentType: "text/xml; charset=utf-8",
+//                     contentType: "text/xml",
+//                     crossDomain: true,
+//                     headers: {
+//                         'Access-Control-Allow-Origin': '*',
+//                         'X-Naver-Client-Id': 'JllAghyZgkp5NcFY8yu6',
+//                         'X-Naver-Client-Secret': 'fubWBULL_Q'
+//                     },
+//                     success: function(data) { },
+//                     error: function(data) { alert('Failed!'); }
+//                 });
+                
+//             })
+        </script>
+        <script type="text/javascript">
+            
+//            $(document).ready(function(){
+//                var url = 'https://m.hanyang.ac.kr/library/seat/seat003001.page?apiUrl=%2FHKSL%2FA201300005.json&apiUrlPath=%2FHKSL%2FA201300005.json&apiUrlParam=&menu_id=M008359&requestType=ajax';
+////                var url = 'https://m.hanyang.ac.kr/library/seat/seat003001.page?apiUrl=%2FHKSL%2FA201300005.json';
+////                var url = 'http://m.naver.com';
+//                $.ajax({
+//                    type: "GET",
+//                    url: url,
+//                    dataType: "jsonp",
+//                    crossOrigin: true,    // 크로스도메인 해결 플러그인
+//                    success: function(html){
+////                        var list = $.parseHTML(html);
+////                        alert(list);
+//                        $('#test').text(html);
+//                    },
+//                    error: function(data){alert('Failed!'+ data)}
+//                })
+//                
+////                $('#test').load(url, function(data){
+////                    $(this).text(data);
+////                    alert('hi');
+////                })
+//            })
+            $(document).ready(function(){
+                $.get("/test", function(string) {
+                    alert(string.data[0].message);
+                })    
+            })
+            
+        </script>
+    </head>
+    <body>
+        <div
+          class="fb-like"
+          data-share="true"
+          data-width="450"
+          data-show-faces="true">
+        </div>
+        <div id="test"></div>
+        <fb:login-button></fb:login>
+    </body>
+</html>
