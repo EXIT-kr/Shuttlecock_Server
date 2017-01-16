@@ -391,21 +391,41 @@
         				// }
 
                 // Sunday
+                // if(week == 0){
+                //   $('#date_version').text('2016년 계절학기 일요일 시간표');
+                //   url += "timetable/sun_table.json";
+                //   subway_url += "3/";
+                // }
+                //         // Saturday
+                // else if(week == 6){
+                //   $('#date_version').text('2016년 계절학기 토요일 시간표');
+                //   url += "timetable/sat_vac.json";
+                //   subway_url += "2/";
+                // }
+                //         // Monday to Friday
+                // else{
+                //   $('#date_version').text('2016년 계절학기 평일 시간표');
+                //   url += "timetable/vac_table.json";
+                //   subway_url += "1/";
+                // }
+
+
+                // Sunday
                 if(week == 0){
-                  $('#date_version').text('2016년 계절학기 일요일 시간표');
+                  $('#date_version').text('2016년 방학중 일요일 시간표');
                   url += "timetable/sun_table.json";
                   subway_url += "3/";
                 }
                         // Saturday
                 else if(week == 6){
-                  $('#date_version').text('2016년 계절학기 토요일 시간표');
-                  url += "timetable/sat_vac.json";
+                  $('#date_version').text('2016년 방학중 토요일 시간표');
+                  url += "timetable/sat_vacation.json";
                   subway_url += "2/";
                 }
                         // Monday to Friday
                 else{
-                  $('#date_version').text('2016년 계절학기 평일 시간표');
-                  url += "timetable/vac_table.json";
+                  $('#date_version').text('2016년 방학중 평일 시간표');
+                  url += "timetable/vacation.json";
                   subway_url += "1/";
                 }
 
